@@ -31,3 +31,15 @@ Analytics only loads after cookie consent (Consent Mode v2).
 The GitHub Pages preview builds with PUBLIC_SAMPLE=1: stock photos from Unsplash and sample figures replace the placeholders, with a thin "Preview" bar on top.
 Placeholders are written as [label|sample] in the source. Without PUBLIC_SAMPLE they show highlighted in yellow, so nothing unconfirmed can go live unnoticed.
 Remove PUBLIC_SAMPLE from the workflow (and replace every [label|sample]) before the real launch.
+
+## AI visibility (ChatGPT, Perplexity, Gemini, Claude, Google AI answers)
+- /llms.txt and /llms-full.txt are generated from the site data at every build.
+- /robots.txt is generated: preview blocks everything; production allows search engines and AI assistants by name.
+- Structured data (schema.org): the firm (LegalService) with each lawyer, Service + FAQ + breadcrumbs on service pages, Article with author and dates on Insights.
+- Every article shows "Last checked" (frontmatter `updated`). Update it whenever a lawyer re-checks the article.
+- GA4 records an `ai_referral` event (ai_source = ChatGPT, Perplexity…) for visits that come from AI tools. In GA4 also create a custom channel group "AI assistants" with source matching: chatgpt|openai|perplexity|claude|gemini|copilot|mistral|deepseek.
+- At launch: submit the sitemap to Google Search Console and Bing Webmaster Tools (ChatGPT search relies on Bing).
+
+## Languages
+English first, then Português (PT), Português (Brasil), Français, Español. See src/i18n/config.ts.
+Translated pages go under /pt/, /pt-br/, /fr/, /es/ with the same slugs. Add the code to `live` only after a native speaker (ideally a lawyer) has reviewed it; hreflang tags and llms.txt pick it up automatically.

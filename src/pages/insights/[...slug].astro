@@ -8,13 +8,23 @@ export async function getStaticPaths() {
 }
 const { p } = Astro.props;
 const { Content } = await p.render();
+import { personSchema, breadcrumbs } from '../../lib/schema';
+import { team } from '../../data/team';
+const base = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), Astro.site);
+const author = team.find((t) => t.name === p.data.author);
+const checked = p.data.updated ?? p.data.date;
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const schema = [
+  { '@type': 'Article', headline: p.data.title, description: p.data.description, datePublished: p.data.date.toISOString(), dateModified: checked.toISOString(), inLanguage: 'en', author: author ? personSchema(base, author.slug) : { '@type': 'Person', name: p.data.author }, publisher: { '@id': new URL('#firm', base).href }, mainEntityOfPage: new URL(`insights/${p.slug}/`, base).href, articleSection: p.data.category },
+  breadcrumbs(base, [['Home', '/'], ['Insights', '/insights/'], [p.data.title, `/insights/${p.slug}/`]]),
+];
 ---
-<Base title={p.data.title} description={p.data.description}>
+<Base title={p.data.title} description={p.data.description} schema={schema}>
   <article class="section">
     <div class="wrap stack" style="gap:24px">
       <p class="small muted"><a href="/insights/">Insights</a> / {p.data.category}</p>
       <h1 style="max-width:22ch">{p.data.title}</h1>
-      <p class="small muted">{p.data.author}{p.data.reviewedBy && ` · Reviewed by ${p.data.reviewedBy}`} · {p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+      <p class="small muted">{p.data.author}{p.data.reviewedBy && ` · Reviewed by ${p.data.reviewedBy}`} · Published {fmt(p.data.date)} · <b>Last checked {fmt(checked)}</b></p>
       <hr class="rule">
       <div class="prose"><Content /></div>
       <p class="small muted" style="max-width:70ch">This article is general information, not legal advice for your situation. Rules change; check the date above.</p>

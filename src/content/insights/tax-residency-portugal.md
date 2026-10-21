@@ -5,6 +5,7 @@ date: 2026-12-10
 category: Tax
 author: "Diogo Pedro"
 image: "1553877522-43269d4ea984"
+updated: 2026-12-15
 draft: false
 ---
 

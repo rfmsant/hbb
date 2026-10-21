@@ -5,6 +5,7 @@ date: 2026-12-05
 category: Succession
 author: "Margarida Tempera"
 image: "1533421821268-87e42c1d70b0"
+updated: 2026-12-15
 draft: false
 ---
 

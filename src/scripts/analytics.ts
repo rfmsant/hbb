@@ -32,4 +32,12 @@ export function track(name: string, params: Record<string, unknown> = {}) {
   if (!ready) console.debug('[analytics]', name, params);
 }
 boot();
+// Visits arriving from AI assistants: recorded as an 'ai_referral' event with the source.
+const AI_SOURCES: Record<string, string> = { 'chatgpt.com': 'ChatGPT', 'chat.openai.com': 'ChatGPT', 'perplexity.ai': 'Perplexity', 'www.perplexity.ai': 'Perplexity', 'claude.ai': 'Claude', 'gemini.google.com': 'Gemini', 'copilot.microsoft.com': 'Copilot', 'www.bing.com': 'Bing / Copilot', 'chat.mistral.ai': 'Mistral', 'chat.deepseek.com': 'DeepSeek', 'you.com': 'You.com', 'grok.com': 'Grok', 'meta.ai': 'Meta AI' };
+try {
+  const ref = document.referrer ? new URL(document.referrer).hostname : '';
+  const utm = new URLSearchParams(location.search).get('utm_source') || '';
+  const src = AI_SOURCES[ref] || (/chatgpt|openai|perplexity|claude|gemini|copilot/i.test(utm) ? utm : '');
+  if (src && !sessionStorage.getItem('hbb-ai')) { sessionStorage.setItem('hbb-ai', '1'); window.gtag('event', 'ai_referral', { ai_source: src, landing_page: location.pathname }); }
+} catch {}
 if (getConsent() === 'all') { window.gtag('consent', 'update', { analytics_storage: 'granted' }); load(); }

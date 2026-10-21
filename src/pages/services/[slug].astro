@@ -5,11 +5,19 @@ import { services, bySlug as svc } from '../../data/services';
 import { bySlug as lawyer } from '../../data/team';
 import { ph } from '../../data/ph';
 import Photo from '../../components/Photo.astro';
+import { breadcrumbs, faqSchema } from '../../lib/schema';
+import { plain } from '../../lib/text';
 export function getStaticPaths() { return services.map((s) => ({ params: { slug: s.slug } })); }
 const s = svc(Astro.params.slug!);
 const l = lawyer(s.lawyer);
+const base = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), Astro.site);
+const schema = [
+  { '@type': 'Service', '@id': new URL(`services/${s.slug}/#service`, base).href, name: s.title, description: plain(s.intro), serviceType: s.title, provider: { '@id': new URL('#firm', base).href }, areaServed: 'Worldwide', availableChannel: { '@type': 'ServiceChannel', serviceUrl: new URL('book/', base).href } },
+  breadcrumbs(base, [['Home', '/'], ['Services', '/services/'], [s.title, `/services/${s.slug}/`]]),
+  faqSchema(s.faq),
+];
 ---
-<Base title={s.title} description={s.short}>
+<Base title={s.title} description={s.short} schema={schema}>
   <section class="section">
     <div class="wrap stack" style="gap:24px">
       <p class="small muted"><a href="/services/">Services</a> / {s.title}</p>
@@ -21,7 +29,7 @@ const l = lawyer(s.lawyer);
 
   <section class="section--paper" style="padding-block:40px">
     <div class="wrap">
-      <p class="eyebrow" style="margin-bottom:16px">At a glance</p>
+      <h2 class="eyebrow" style="margin-bottom:16px;font-family:var(--sans);font-size:13px">Key facts</h2>
       <dl class="glance">
         {s.glance.map(([k, v]) => <div><dt>{k}</dt><dd set:html={ph(v)} /></div>)}
         <div><dt>Your lawyer</dt><dd>{l.name}</dd></div>

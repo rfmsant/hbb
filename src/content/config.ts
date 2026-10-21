@@ -10,6 +10,7 @@ const insights = defineCollection({
     reviewedBy: z.string().optional(),
     draft: z.boolean().default(true),
     image: z.string().optional(),
+    updated: z.coerce.date().optional(),
   }),
 });
 export const collections = { insights };

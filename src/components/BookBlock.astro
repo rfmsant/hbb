@@ -1,0 +1,40 @@
+---
+import { site } from '../data/site';
+import { ph } from '../data/ph';
+---
+<section class="section section--navy" id="book">
+  <div class="wrap grid grid--2" style="align-items:start">
+    <div class="stack">
+      <p class="eyebrow">Book your free call</p>
+      <h2>Speak with a lawyer, in confidence.</h2>
+      <ul class="ticks">
+        <li>20 minutes by video, free and without commitment</li>
+        <li>With the lawyer who would lead your case</li>
+        <li>You leave knowing your likely routes and next steps</li>
+        <li>Slots from 08:00 to 21:00 Lisbon time, for the Americas and Asia</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <div class="opt">
+        <div class="opt__top"><h3>Free first call</h3><span>Free</span></div>
+        <p>20 minutes by video. Your situation, the routes open to you and the next steps.</p>
+        <a class="btn btn--primary" href="/book/?type=free" data-cta="book-free">Book a free 20-min call</a>
+      </div>
+      <div class="opt">
+        <div class="opt__top"><h3>Strategy session</h3><span set:html={ph(site.strategySessionPrice)} /></div>
+        <p>60 minutes with a partner, by video or in Lisbon. A concrete plan, costs and order of steps. Credited in full if you engage us.</p>
+        <a class="btn btn--ghost" href="/book/?type=strategy" data-cta="book-strategy">Book a strategy session</a>
+      </div>
+      <p class="small" style="color:#D9D4C8" set:html={ph(`Both start with six short questions, so your lawyer arrives prepared. Prefer to call? ${site.phone}`)} />
+    </div>
+  </div>
+</section>
+<style>
+  .ticks { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; color: #D9D4C8; }
+  .ticks li::before { content: '—'; color: var(--gold-light); margin-right: 10px; }
+  .opt { background: var(--ivory); color: var(--navy); padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .opt__top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .opt__top span { font-weight: 500; }
+  .opt .btn--ghost { color: var(--navy); border-color: var(--navy); }
+  .opt .btn--ghost:hover { color: var(--ivory); }
+</style>

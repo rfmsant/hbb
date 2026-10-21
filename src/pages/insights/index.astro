@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('insights', (p) => !p.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+---
+<Base title="Insights" description="Clear answers on Portuguese residency, tax, property and succession, checked by a lawyer.">
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Insights</p><h1>Clear answers, checked by a lawyer.</h1></div>
+      <div class="grid">
+        {posts.map((p) => <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none"><p class="eyebrow" style="letter-spacing:.12em">{p.data.category}</p><h3>{p.data.title}</h3><p class="small muted">{p.data.description}</p><p class="small muted">{p.data.author} · {p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p></a>)}
+      </div>
+    </div>
+  </section>
+</Base>

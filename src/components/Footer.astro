@@ -1,0 +1,27 @@
+---
+import { site } from '../data/site';
+import { ph } from '../data/ph';
+---
+<footer class="ftr section--navy">
+  <div class="wrap ftr__in">
+    <div class="stack">
+      <img src="/logo-negative.svg" alt="HBB Harbor Beyond Borders" width="200" height="55">
+      <p class="small" style="color:#D9D4C8">Immigration, tax &amp; property lawyers in Lisbon.</p>
+    </div>
+    <div class="stack small">
+      <p set:html={ph(`${site.legalName} · Ordem dos Advogados nº ${site.oaNumber} · NIPC ${site.nipc}`)} />
+      <p set:html={ph(`${site.address} · ${site.phone} · ${site.email}`)} />
+      <p class="ftr__links">
+        <a href="/privacy/">Privacy</a><a href="/cookies/">Cookies</a><a href="/terms/">Terms</a>
+        <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações</a>
+        <button type="button" class="linklike" data-open-consent>Cookie settings</button>
+      </p>
+    </div>
+  </div>
+</footer>
+<style>
+  .ftr { padding-block: 56px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .ftr__in { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
+  .ftr__links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .linklike { background: none; border: 0; padding: 0; font: inherit; color: var(--ivory); text-decoration: underline; cursor: pointer; }
+</style>

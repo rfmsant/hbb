@@ -1,0 +1,184 @@
+---
+import Base from '../layouts/Base.astro';
+import { team } from '../data/team';
+import { site } from '../data/site';
+const lawyers = Object.fromEntries(team.map((l) => [l.slug, { name: l.name, role: l.role, bookingUrl: l.bookingUrl }]));
+---
+<Base title="Book a call" description="Six short questions, then choose a time with the lawyer who would lead your case.">
+  <script is:inline define:vars={{ lawyers, price: site.strategySessionPrice }}>window.__HBB = { lawyers, price };</script>
+  <section class="section section--paper book">
+    <div class="wrap">
+      <div class="panel" id="app" aria-live="polite">
+        <noscript><p>Please enable JavaScript to book online, or call us on {site.phone}.</p></noscript>
+      </div>
+      <p class="small muted aside">Your answers are confidential and only used to prepare your call. <a href="/privacy/">Privacy policy</a>.</p>
+    </div>
+  </section>
+</Base>
+<script>
+  import { track } from '../scripts/analytics';
+  type L = { name: string; role: string; bookingUrl: string };
+  const { lawyers, price } = (window as any).__HBB as { lawyers: Record<string, L>; price: string };
+
+  const Q = [
+    { q: 'What matters most in your move?', o: ['EU residence for my family, without living here full time', 'Living in Portugal most of the year', 'Moving or starting a company', 'Planning my taxes before I move'] },
+    { q: 'How much time will you spend in Portugal?', o: ['A few weeks a year', 'Most of the year', 'Not sure yet'] },
+    { q: 'What is your main source of income?', o: ['Investments, pension or other passive income', 'Remote work for clients or an employer abroad', 'My own company', 'A job offer in Portugal'] },
+    { q: 'Are you considering a qualifying investment in Portugal?', o: ['Yes', 'No', 'I would like advice first'] },
+    { q: 'Who is moving with you?', o: ['Just me', 'My partner', 'My family, with children', 'Family including my parents'] },
+    { q: 'When would you like to move?', o: ['Within 6 months', 'In 6 to 12 months', 'In more than a year', 'Still exploring'] },
+  ];
+  const LABELS = ['About 2 minutes', 'About 1 minute left', 'About 1 minute left', 'Halfway there', 'Almost done', 'Last question'];
+  const params = new URLSearchParams(location.search);
+  const presetType = params.get('type'); // 'free' | 'strategy'
+  const S: { step: number; a: number[]; call: number | null; name: string; email: string; phone: string; country: string; slot: string } =
+    { step: 0, a: [], call: presetType === 'strategy' ? 1 : presetType === 'free' ? 0 : null, name: '', email: '', phone: '', country: '', slot: '' };
+  const N = Q.length, CALL = N, DETAILS = N + 1, TIMES = N + 2, DONE = N + 3;
+  const app = document.getElementById('app')!;
+  const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+
+  // Routing rules: see the "Regras do questionário" doc. First match wins.
+  function result() {
+    const [g, t, inc, inv] = S.a;
+    let route = 'To assess', title = 'Several routes worth comparing', text = 'Your answers point to more than one possible route. Your lawyer will compare them with you.';
+    if ((g === 0 || t === 0) && inv !== 1) { route = 'Golden Visa'; title = 'Golden Visa (investor residency)'; text = 'EU residence through a qualifying investment, with limited time required in Portugal, and a review of your tax position before you invest.'; }
+    else if (g === 2 || inc === 2) { route = 'D2'; title = 'D2 (entrepreneur) visa'; text = 'For founders starting or moving a company to Portugal, with company set-up and tax planned together.'; }
+    else if (inc === 1) { route = 'D8'; title = 'D8 (digital nomad) visa'; text = 'For remote workers earning from clients or an employer abroad.'; }
+    else if (inc === 3) { route = 'To assess'; }
+    else if (inc === 0 || g === 1) { route = 'D7'; title = 'D7 (passive income) visa'; text = 'For people living in Portugal on pensions, investments or other passive income.'; }
+    if (g === 3) text += ' Tax planning before arrival will be part of the conversation.';
+    const lawyerSlug = g === 3 || route === 'D2' ? 'diogo-pedro' : 'florbela-lopes';
+    const priority = S.a[5] === 0 && (route === 'Golden Visa' || route === 'D2') ? 'High' : S.a[5] === 3 && t === 2 ? 'Low' : 'Normal';
+    return { route, title, text, lawyer: lawyers[lawyerSlug], lawyerSlug, priority };
+  }
+  const callKind = () => (S.call === 1 ? 'Strategy session' : 'Free call');
+  const callTitle = () => `HBB · ${callKind()} · ${result().route} · ${S.name || '[Client name]'}`;
+
+  function progress() {
+    if (S.step >= N) return '';
+    const bars = Q.map((_, i) => `<span class="${i < S.step ? 'on' : ''}"></span>`).join('');
+    return `<div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${N}" aria-valuenow="${S.step}" aria-label="Question ${S.step + 1} of ${N}"><div class="bars">${bars}</div><p class="small muted">Question ${S.step + 1} of ${N} · ${LABELS[S.step]}</p></div>`;
+  }
+  const back = (to: number) => `<button type="button" class="back" data-back="${to}">← Back</button>`;
+
+  function render() {
+    let h = '';
+    if (S.step < N) {
+      const q = Q[S.step];
+      h = `${progress()}<p class="eyebrow">Book your call</p><h1 class="q">${q.q}</h1>${S.step === 0 ? '<p class="muted">Six short questions, so your lawyer arrives prepared. About two minutes.</p>' : ''}
+        <div class="opts">${q.o.map((o, i) => `<button type="button" class="opt ${S.a[S.step] === i ? 'sel' : ''}" data-ans="${i}">${o}</button>`).join('')}</div>
+        ${S.step > 0 ? back(S.step - 1) : ''}`;
+    } else if (S.step === CALL) {
+      const r = result();
+      h = `<p class="eyebrow">Questions done</p><div class="res"><p class="small muted">Likely route</p><h2>${r.title}</h2><p class="muted">${r.text}</p></div>
+        <h1 class="q">How would you like to start?</h1>
+        <div class="opts">
+          <button type="button" class="opt opt--row ${S.call === 0 ? 'sel' : ''}" data-call="0"><span><b>Free first call</b><br><span class="small muted">20 minutes by video with ${r.lawyer.name}</span></span><span>Free</span></button>
+          <button type="button" class="opt opt--row ${S.call === 1 ? 'sel' : ''}" data-call="1"><span><b>Strategy session</b><br><span class="small muted">60 minutes with a partner · credited if you engage us</span></span><span>${esc(price)}</span></button>
+        </div>${back(N - 1)}`;
+    } else if (S.step === DETAILS) {
+      h = `<p class="eyebrow">Your details</p><h1 class="q">Who should ${result().lawyer.name} expect?</h1>
+        <form id="det" class="form" novalidate>
+          <label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required value="${esc(S.name)}">
+          <label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required value="${esc(S.email)}">
+          <label for="f-phone">Phone <span class="muted">(optional)</span></label><input id="f-phone" name="phone" type="tel" autocomplete="tel" value="${esc(S.phone)}">
+          <label for="f-country">Country you live in now <span class="muted">(optional)</span></label><input id="f-country" name="country" autocomplete="country-name" value="${esc(S.country)}">
+          <label class="check"><input type="checkbox" id="f-consent" required> I agree that HBB uses my answers to prepare my call, as described in the <a href="/privacy/" target="_blank">privacy policy</a>.</label>
+          <label class="check"><input type="checkbox" id="f-news"> Send me occasional updates on Portuguese residency and tax law.</label>
+          <p class="err" id="err" role="alert"></p>
+          <button class="btn btn--primary" type="submit">Continue to choose a time</button>
+        </form>${back(CALL)}`;
+    } else if (S.step === TIMES) {
+      const r = result();
+      if (r.lawyer.bookingUrl) {
+        const u = new URL(r.lawyer.bookingUrl); u.searchParams.set('name', S.name); u.searchParams.set('email', S.email);
+        h = `<p class="eyebrow">Choose a time</p><h1 class="q">Pick a time with ${r.lawyer.name}.</h1><iframe class="bk" src="${esc(u.toString())}" title="Booking calendar"></iframe>
+          <p class="small muted">Booked? <button type="button" class="linkbtn" data-done>Show my confirmation</button></p>`;
+      } else {
+        const days = ['Monday', 'Tuesday', 'Wednesday'];
+        h = `<p class="eyebrow">Choose a time</p><h1 class="q">Pick a time with ${r.lawyer.name}.</h1><p class="small"><span class="ph">[Demo slots. At launch this shows ${r.lawyer.name}'s live calendar.]</span></p>
+          ${days.map((d) => `<div class="day"><p><b>${d}</b> · Lisbon time</p><div class="slots">${['09:00', '13:30', '18:00', '20:30'].map((t) => `<button type="button" class="slot" data-slot="${d}, ${t}">${t}</button>`).join('')}</div></div>`).join('')}`;
+      }
+      h += back(DETAILS);
+    } else {
+      const r = result();
+      const prep = ['Passports of everyone moving with you', r.route === 'Golden Visa' ? 'The investment amount and type you are considering' : 'A rough idea of your income or the amount you plan to invest', 'Your ideal moving date', 'Any questions about tax, schools or property'];
+      h = `<p class="eyebrow">Confirmed</p><h1 class="q">See you ${S.slot ? esc(S.slot) : 'soon'}, ${esc(S.name.split(' ')[0] || '')}.</h1>
+        <div class="res"><p><b>${callKind()}</b> · ${S.call === 1 ? '60' : '20'} minutes by video</p><p>With <b>${r.lawyer.name}</b>, ${r.lawyer.role}</p><p class="small muted">In your calendar as: ${esc(callTitle())}</p></div>
+        <p class="eyebrow" style="margin-top:8px">Have at hand</p><ul class="list">${prep.map((p) => `<li>${p}</li>`).join('')}</ul>
+        <p class="muted">A confirmation email from ${r.lawyer.name} is on its way, with the video link and a calendar invitation. Need another time? Use the link in that email.</p>
+        <a href="/" class="btn btn--ghost">Back to the homepage</a>`;
+    }
+    app.innerHTML = h;
+    (app.querySelector('h1') as HTMLElement)?.focus?.();
+  }
+
+  async function sendLead() {
+    const r = result();
+    const body = { answers: S.a.map((i, k) => ({ question: Q[k].q, answer: Q[k].o[i] })), route: r.route, priority: r.priority, lawyer: r.lawyer.name, callType: callKind(), callTitle: callTitle(),
+      name: S.name, email: S.email, phone: S.phone, country: S.country, marketing: (document.getElementById('f-news') as HTMLInputElement)?.checked ?? false, page: location.href };
+    try { await fetch('/api/lead', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); } catch { /* the booking continues; Zoho also receives the booking itself */ }
+  }
+
+  app.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!el) return;
+    if (el.dataset.ans !== undefined) {
+      const i = +el.dataset.ans; S.a[S.step] = i;
+      track('question_answered', { question_number: S.step + 1, answer: Q[S.step].o[i] });
+      S.step = S.step + 1 === N && S.call !== null ? (track('call_type_selected', { call_type: callKind(), preset: true }), DETAILS) : S.step + 1;
+      render();
+    } else if (el.dataset.call !== undefined) {
+      S.call = +el.dataset.call; track('call_type_selected', { call_type: callKind() }); S.step = DETAILS; render();
+    } else if (el.dataset.back !== undefined) {
+      S.step = +el.dataset.back; render();
+    } else if (el.dataset.slot !== undefined) {
+      S.slot = el.dataset.slot; S.step = DONE; track('booking_completed', { call_type: callKind(), route: result().route }); render();
+    } else if (el.dataset.done !== undefined) {
+      S.step = DONE; track('booking_completed', { call_type: callKind(), route: result().route }); render();
+    }
+  });
+  app.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target as HTMLFormElement; const d = new FormData(f); const err = f.querySelector('#err')!;
+    S.name = String(d.get('name') || '').trim(); S.email = String(d.get('email') || '').trim(); S.phone = String(d.get('phone') || ''); S.country = String(d.get('country') || '');
+    if (!S.name) { err.textContent = 'Please enter your name.'; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(S.email)) { err.textContent = 'Please enter a valid email address, so we can send your confirmation.'; return; }
+    if (!(f.querySelector('#f-consent') as HTMLInputElement).checked) { err.textContent = 'Please accept the privacy terms to continue.'; return; }
+    track('details_submitted', { route: result().route, call_type: callKind() });
+    sendLead(); S.step = TIMES; render();
+  });
+
+  track('booking_start', { preset_type: presetType || 'none', route_hint: params.get('route') || '' });
+  render();
+</script>
+<style is:global>
+  .book .panel { max-width: 720px; margin: 0 auto; background: var(--white); padding: clamp(24px, 5vw, 48px); display: flex; flex-direction: column; gap: 18px; min-height: 520px; }
+  .book .aside { max-width: 720px; margin: 16px auto 0; }
+  .book .panel > .btn { align-self: flex-start; }
+  .book .q { font-size: clamp(28px, 4vw, 38px); outline: none; }
+  .prog .bars { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 8px; }
+  .prog .bars span { height: 4px; background: #D6CFBF; }
+  .prog .bars span.on { background: var(--navy); }
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt { text-align: left; min-height: 56px; padding: 14px 18px; background: var(--white); border: 1px solid var(--line); font: 16px/1.4 var(--sans); color: var(--navy); cursor: pointer; border-radius: 0; }
+  .opt:hover { border-color: var(--navy); }
+  .opt.sel { border-color: var(--navy); box-shadow: inset 3px 0 0 var(--gold); }
+  .opt--row { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+  .back, .linkbtn { align-self: flex-start; background: none; border: 0; padding: 8px 0; font: 15px var(--sans); color: var(--slate); cursor: pointer; text-decoration: underline; }
+  .res { background: var(--paper); border-top: 2px solid var(--navy); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .res h2 { font-size: 26px; }
+  .form { display: flex; flex-direction: column; gap: 8px; }
+  .form label { font-size: 15px; font-weight: 500; margin-top: 8px; }
+  .form input:not([type=checkbox]) { min-height: 48px; padding: 10px 12px; border: 1px solid #BFB8AA; font: 16px var(--sans); color: var(--navy); border-radius: 0; }
+  .form .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; }
+  .form .check input { margin-top: 5px; width: 18px; height: 18px; flex: none; }
+  .form .btn { margin-top: 12px; align-self: flex-start; }
+  .err { color: #8A2B2B; font-size: 15px; min-height: 1em; }
+  .day { display: flex; flex-direction: column; gap: 8px; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .slot { min-height: 44px; min-width: 88px; background: var(--white); border: 1px solid var(--navy); font: 500 15px var(--sans); color: var(--navy); cursor: pointer; }
+  .slot:hover { background: var(--navy); color: var(--ivory); }
+  .bk { width: 100%; height: 720px; border: 1px solid var(--line); }
+  .list { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .list li::before { content: '—'; color: var(--gold); margin-right: 10px; }
+</style>

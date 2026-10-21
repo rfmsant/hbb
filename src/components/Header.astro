@@ -1,0 +1,47 @@
+---
+import { nav } from '../data/site';
+---
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a href="/" class="hdr__logo" aria-label="HBB Harbor Beyond Borders, home"><img src="/logo.svg" alt="" width="176" height="48"></a>
+    <nav class="hdr__nav" aria-label="Main">
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+    <div class="hdr__end">
+      <a href="/book/" class="btn btn--primary hdr__cta" data-cta="header">Book a free 20-min call</a>
+      <button class="hdr__menu" aria-expanded="false" aria-controls="mnav" type="button">Menu</button>
+    </div>
+  </div>
+  <nav id="mnav" class="mnav" aria-label="Mobile" hidden>
+    {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    <a href="/book/" class="btn btn--primary" data-cta="mobile-menu">Book a free 20-min call</a>
+  </nav>
+</header>
+<a href="/book/" class="sticky-cta btn btn--primary" data-cta="sticky">Book a free 20-min call</a>
+<style>
+  .hdr { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px); }
+  .hdr__in { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 76px; }
+  .hdr__logo img { width: 176px; height: auto; }
+  .hdr__nav { display: flex; gap: 28px; font-size: 15px; }
+  .hdr__nav a { text-decoration: none; }
+  .hdr__end { display: flex; align-items: center; gap: 12px; }
+  .hdr__menu { display: none; min-height: 44px; padding: 0 16px; background: none; border: 1px solid var(--navy); font: 500 15px var(--sans); color: var(--navy); }
+  .mnav { display: flex; flex-direction: column; gap: 4px; padding: 12px 20px 20px; border-top: 1px solid var(--line); background: var(--white); }
+  .mnav[hidden] { display: none; }
+  .mnav a:not(.btn) { padding: 12px 0; text-decoration: none; font-size: 18px; border-bottom: 1px solid var(--line); }
+  .mnav .btn { margin-top: 12px; }
+  .sticky-cta { display: none; }
+  @media (max-width: 1020px) {
+    .hdr__nav, .hdr__cta { display: none; }
+    .hdr__menu { display: inline-flex; align-items: center; }
+    .hdr__logo img { width: 150px; }
+    .sticky-cta { display: flex; position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 30; box-shadow: 0 6px 20px rgba(18,35,63,.25); }
+  }
+</style>
+<script>
+  const b = document.querySelector('.hdr__menu') as HTMLButtonElement;
+  const m = document.getElementById('mnav')!;
+  b?.addEventListener('click', () => { const o = m.hidden; m.hidden = !o; b.setAttribute('aria-expanded', String(o)); });
+  // Hide the sticky button on the booking page itself.
+  if (/\/book\/?$/.test(location.pathname)) document.querySelector('.sticky-cta')?.remove();
+</script>

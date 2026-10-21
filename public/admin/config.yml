@@ -1,0 +1,24 @@
+# Decap CMS: lets the team write and edit Insights articles without code.
+# Login uses GitHub. Set repo below once the repository exists.
+backend:
+  name: github
+  repo: OWNER/hbb-website
+  branch: main
+publish_mode: editorial_workflow   # every article is a draft until approved
+media_folder: public/images/insights
+public_folder: /images/insights
+collections:
+  - name: insights
+    label: Insights
+    folder: src/content/insights
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Summary (for Google, max 155 characters), name: description, widget: text }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD" }
+      - { label: Category, name: category, widget: select, options: [Residency, Tax, Property, Business, Succession, Living] }
+      - { label: Author, name: author, widget: string }
+      - { label: Reviewed by (lawyer), name: reviewedBy, widget: string, required: false }
+      - { label: Draft, name: draft, widget: boolean, default: true }
+      - { label: Body, name: body, widget: markdown }

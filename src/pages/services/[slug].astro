@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookBlock from '../../components/BookBlock.astro';
+import { services, bySlug as svc } from '../../data/services';
+import { bySlug as lawyer } from '../../data/team';
+import { ph } from '../../data/ph';
+export function getStaticPaths() { return services.map((s) => ({ params: { slug: s.slug } })); }
+const s = svc(Astro.params.slug!);
+const l = lawyer(s.lawyer);
+---
+<Base title={s.title} description={s.short}>
+  <section class="section">
+    <div class="wrap stack" style="gap:24px">
+      <p class="small muted"><a href="/services/">Services</a> / {s.title}</p>
+      <h1>{s.title}</h1>
+      <p class="lead" set:html={ph(s.intro)} />
+      <div class="btn-row"><a href={`/book/?route=${s.slug}`} class="btn btn--primary" data-cta={`service-${s.slug}`}>Book a free 20-min call</a>{s.table && <a href="#routes" class="btn btn--ghost">See qualifying investments</a>}</div>
+    </div>
+  </section>
+
+  <section class="section--paper" style="padding-block:40px">
+    <div class="wrap">
+      <p class="eyebrow" style="margin-bottom:16px">At a glance</p>
+      <dl class="glance">
+        {s.glance.map(([k, v]) => <div><dt>{k}</dt><dd set:html={ph(v)} /></div>)}
+        <div><dt>Your lawyer</dt><dd>{l.name}</dd></div>
+      </dl>
+      <p class="small muted" style="margin-top:16px" set:html={ph('All figures checked against official sources on [date].')} />
+    </div>
+  </section>
+
+  {s.table && (
+    <section class="section" id="routes">
+      <div class="wrap stack" style="gap:24px">
+        <h2>Which investments qualify</h2>
+        <p class="lead">The right route depends on your assets, your appetite for risk and your tax position. We review each option with you before you invest.</p>
+        <div class="table-wrap"><table class="data"><tr>{s.table.head.map((h) => <th>{h}</th>)}</tr>{s.table.rows.map((r) => <tr>{r.map((c) => <td set:html={ph(c)} />)}</tr>)}</table></div>
+        {s.table.note && <div class="note"><h3>Our independence</h3><p class="muted">{s.table.note}</p></div>}
+      </div>
+    </section>
+  )}
+
+  {s.fit && (
+    <section class="section section--paper">
+      <div class="wrap grid grid--2">
+        <div class="stack"><h2 style="font-size:30px">Usually a good fit</h2><ul class="list">{s.fit.map((f) => <li>{f}</li>)}</ul></div>
+        {s.other && <div class="stack"><h2 style="font-size:30px">Consider another route if</h2><ul class="list">{s.other.map(([t, slug]) => <li>{t}: <a href={`/services/${slug}/`}>{svc(slug).title}</a></li>)}</ul></div>}
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="wrap stack" style="gap:24px">
+      <h2>How we handle it</h2>
+      <ol class="steps">{s.steps.map(([t, d], i) => <li><span class="n">{String(i + 1).padStart(2, '0')}</span><div><h3>{t}</h3><p class="muted">{d}</p></div></li>)}</ol>
+      <p class="small muted">Timelines depend on the authorities and are indicative. No outcome or processing time can be guaranteed.</p>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap stack" style="gap:24px">
+      <h2>Fees and official costs</h2>
+      <p class="lead">Our fee is fixed and agreed in writing. Official costs are paid to the authorities and listed separately.</p>
+      <div class="table-wrap"><table class="data"><tr><th>Item</th><th>Amount</th><th>Basis</th></tr>{s.fees.map((r) => <tr>{r.map((c) => <td set:html={ph(c)} />)}</tr>)}</table></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid grid--2" style="align-items:start">
+      <div class="stack"><div class="photo-ph" style="max-width:320px">[Portrait]</div><p class="eyebrow">Your lawyer</p><h3>{l.name}</h3><p class="muted small">{l.role}</p><p class="small muted" set:html={ph('[X] years in practice · [Languages] · Ordem dos Advogados nº [—]')} /></div>
+      <div class="stack"><h2 style="font-size:30px">Questions clients ask</h2><div>{s.faq.map(([q, a]) => <details><summary>{q}</summary><p set:html={ph(a)} /></details>)}</div></div>
+    </div>
+  </section>
+  <BookBlock />
+</Base>
+<style>
+  .glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 20px 32px; margin: 0; }
+  .glance div { border-top: 1px solid var(--navy); padding-top: 10px; }
+  .glance dt { font-size: 13px; color: var(--slate); }
+  .glance dd { margin: 4px 0 0; font-family: var(--serif); font-size: 20px; }
+  .note { border-left: 0; background: var(--paper); padding: 24px; }
+  .list { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .list li::before { content: '—'; color: var(--gold); margin-right: 10px; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .steps li { display: flex; gap: 16px; border-top: 1px solid var(--navy); padding-top: 16px; }
+  .steps .n { width: 44px; height: 44px; flex: none; background: var(--navy); color: var(--gold-light); display: flex; align-items: center; justify-content: center; font-family: var(--serif); }
+</style>

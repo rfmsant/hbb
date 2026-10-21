@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas } from '../data/services';
+import { team } from '../data/team';
+import { site } from '../data/site';
+import { ph } from '../data/ph';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('insights', (p) => !p.data.draft)).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+const areaLink: Record<string, string> = { residency: '/services/golden-visa/', tax: '/services/tax/', property: '/services/property/', company: '/services/d2-visa/', succession: '/services/succession/' };
+---
+<Base title="HBB — Immigration, tax & property lawyers in Lisbon" description="Residency, tax, property and succession for investors, founders and families moving to Portugal. Partner-led, fixed fees, independent.">
+  <section class="hero section">
+    <div class="wrap hero__in">
+      <div class="stack">
+        <p class="eyebrow">Immigration, tax &amp; property lawyers · Lisbon</p>
+        <h1>A future in Europe for your family, structured by one legal team.</h1>
+        <p class="lead">Residency, tax, property and succession for investors, founders and families moving to Portugal. Partner-led, fixed fees, and no commissions from anyone but you.</p>
+        <div class="btn-row">
+          <a href="/book/" class="btn btn--primary" data-cta="hero">Book a free 20-min call</a>
+          <a href="/services/golden-visa/" class="btn btn--ghost">Explore investor residency</a>
+        </div>
+        <ul class="proof">
+          <li>Independent: no commissions from funds, developers or banks</li>
+          <li>Partner-led from first call to residence card</li>
+          <li>First call free, 20 minutes</li>
+        </ul>
+      </div>
+      <div class="photo-ph hero__img">[Commissioned photography: partners in the Lisbon office. No stock images.]</div>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="who-we-advise">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Who we advise</p><h2>For people whose move involves more than a visa.</h2></div>
+      <div class="grid">
+        <div class="card"><h3>Investors</h3><p class="muted">A Plan B and EU access for your family, through a qualifying investment and a tax plan made for it.</p><a class="more" href="/services/golden-visa/">Investor residency →</a></div>
+        <div class="card"><h3>Founders &amp; executives</h3><p class="muted">Move yourself, your company or your key people, with the tax position settled before you arrive.</p><a class="more" href="/services/d2-visa/">Founder routes →</a></div>
+        <div class="card"><h3>Families</h3><p class="muted">Residency for everyone, a home bought safely, schools arranged and a long-term path to citizenship.</p><a class="more" href="/services/d7-visa/">Family relocation →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Who you will work with</p><h2>A new firm. Not new lawyers.</h2><p class="lead">Our partners previously advised international clients at leading Lisbon immigration and tax practices.</p></div>
+      <div class="grid">
+        <div class="stack"><h3>Trained in international cases</h3><p class="muted">Our lawyers come from Lisbon practices advising foreign clients on residency and tax.</p></div>
+        <div class="stack"><h3>A lawyer on every case</h3><p class="muted">Registered with the Portuguese Bar, from the first call to the residence card.</p></div>
+        <div class="stack"><h3>A small team, by choice</h3><p class="muted">We take on a limited number of clients so each one gets real attention.</p></div>
+        <div class="stack"><h3>In your language</h3><p class="muted" set:html={ph('Advice in English and Portuguese [and other languages].')} /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Services</p><h2>One plan across five areas of law.</h2><p class="lead">Residency, tax, property and succession affect each other. We decide them together.</p></div>
+      <div class="grid">
+        {areas.map((a) => <div class="card"><h3>{a.title}</h3><p class="muted">{a.short}</p><a class="more" href={areaLink[a.slug]}>Explore →</a></div>)}
+      </div>
+      <p class="small muted">We coordinate with your private bank, wealth manager and trusted partners for schools and home search. We take no referral fees.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Why HBB</p><h2>The attention of a private practice. The clarity of a fixed plan.</h2></div>
+      <div class="grid">
+        <div class="stack why"><h3>Independent by principle</h3><p class="muted">We receive no commissions from funds, developers or banks. Our only fee is yours.</p></div>
+        <div class="stack why"><h3>Partner-led, start to finish</h3><p class="muted">A named partner leads your case. You are never passed to a case manager.</p></div>
+        <div class="stack why"><h3>Fixed fees, in writing</h3><p class="muted">Agreed before work begins. Official costs listed separately, with their sources.</p></div>
+        <div class="stack why"><h3>Discretion by design</h3><p class="muted">Documents through a secure portal only. NDA available on request.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">Our lawyers</p><h2>You will know who is handling your case.</h2></div>
+      <div class="grid">
+        {team.map((l) => <div class="stack" style="gap:12px"><div class="photo-ph">[Portrait]</div><h3>{l.name}</h3><p class="small eyebrow" style="letter-spacing:.12em">{l.role}</p><p class="small muted" set:html={ph('[X] years in practice · [Languages] · Ordem dos Advogados nº [—]')} /></div>)}
+      </div>
+      <a href="/team/">Meet the team →</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="gap:32px">
+      <div class="stack"><p class="eyebrow">Fees</p><h2>Clear before you commit.</h2><p class="lead">Every engagement is fixed and agreed in writing. Official costs are paid to the authorities and shown separately on each service page.</p></div>
+      <div class="table-wrap"><table class="data">
+        <tr><th>Service</th><th>What you get</th><th>Fee</th></tr>
+        <tr><td>First call</td><td>20 minutes with a lawyer · your situation and the routes open to you</td><td>Free</td></tr>
+        <tr><td>Strategy session</td><td>60 minutes with a partner · a concrete plan, costs and order of steps · credited in full if you engage us</td><td set:html={ph(site.strategySessionPrice)} /></tr>
+        <tr><td>Residency engagements</td><td>Main applicant, fixed fee · family members quoted separately</td><td set:html={ph('from €[X]')} /></tr>
+        <tr><td>Combined residency, tax &amp; property plan</td><td>Quoted after your first call or strategy session</td><td>On proposal</td></tr>
+      </table></div>
+    </div>
+  </section>
+
+  <BookBlock />
+
+  <section class="section">
+    <div class="wrap stack" style="gap:32px">
+      <div class="stack"><p class="eyebrow">Insights</p><h2>Clear answers, checked by a lawyer.</h2></div>
+      <div class="grid">
+        {posts.length ? posts.map((p) => <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none"><p class="eyebrow" style="letter-spacing:.12em">{p.data.category}</p><h3>{p.data.title}</h3><p class="small muted">{p.data.author} · {p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p></a>) : <p class="muted">Articles coming soon.</p>}
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .hero { padding-block: clamp(48px, 7vw, 96px); }
+  .hero__in { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+  .hero__img { aspect-ratio: 4 / 5; }
+  .proof { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: var(--slate); border-top: 1px solid var(--line); padding-top: 20px; }
+  .proof li::before { content: '—'; color: var(--gold); margin-right: 10px; }
+  .why { border-top: 1px solid var(--navy); padding-top: 18px; }
+  @media (max-width: 860px) { .hero__in { grid-template-columns: 1fr; } .hero__img { aspect-ratio: 16 / 10; } }
+</style>

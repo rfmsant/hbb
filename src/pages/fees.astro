@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { services } from '../data/services';
+import { site } from '../data/site';
+import { ph } from '../data/ph';
+---
+<Base title="Fees" description="Fixed fees agreed in writing. First call free. Official costs listed separately.">
+  <section class="section">
+    <div class="wrap stack" style="gap:32px">
+      <div class="stack"><p class="eyebrow">Fees</p><h1>Clear before you commit.</h1><p class="lead">Every engagement has a fixed fee, agreed in writing before work begins. Official costs are paid to the authorities and listed separately, with their sources.</p></div>
+      <div class="table-wrap"><table class="data">
+        <tr><th>Service</th><th>From</th><th>Notes</th></tr>
+        <tr><td>First call, 20 minutes</td><td>Free</td><td>No commitment</td></tr>
+        <tr><td>Strategy session, 60 minutes</td><td set:html={ph(site.strategySessionPrice)} /><td>Credited in full if you engage us</td></tr>
+        {services.map((s) => <tr><td><a href={`/services/${s.slug}/`}>{s.title}</a></td><td set:html={ph('€[X]')} /><td>Fixed, main applicant or main matter</td></tr>)}
+      </table></div>
+      <div class="grid">
+        <div class="stack"><h3>What is always included</h3><p class="muted">Your lawyer's time, document review, submissions and updates at every stage.</p></div>
+        <div class="stack"><h3>What is never included</h3><p class="muted">Official fees, translations and apostilles. We list them up front with their source.</p></div>
+        <div class="stack"><h3>How you pay</h3><p class="muted" set:html={ph('[Instalments and timing to be confirmed by the partners.]')} /></div>
+      </div>
+    </div>
+  </section>
+  <BookBlock />
+</Base>

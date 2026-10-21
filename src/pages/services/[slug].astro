@@ -4,6 +4,7 @@ import BookBlock from '../../components/BookBlock.astro';
 import { services, bySlug as svc } from '../../data/services';
 import { bySlug as lawyer } from '../../data/team';
 import { ph } from '../../data/ph';
+import Photo from '../../components/Photo.astro';
 export function getStaticPaths() { return services.map((s) => ({ params: { slug: s.slug } })); }
 const s = svc(Astro.params.slug!);
 const l = lawyer(s.lawyer);
@@ -25,7 +26,7 @@ const l = lawyer(s.lawyer);
         {s.glance.map(([k, v]) => <div><dt>{k}</dt><dd set:html={ph(v)} /></div>)}
         <div><dt>Your lawyer</dt><dd>{l.name}</dd></div>
       </dl>
-      <p class="small muted" style="margin-top:16px" set:html={ph('All figures checked against official sources on [date].')} />
+      <p class="small muted" style="margin-top:16px" set:html={ph('All figures checked against official sources on [date|15 December 2026].')} />
     </div>
   </section>
 
@@ -67,7 +68,7 @@ const l = lawyer(s.lawyer);
 
   <section class="section">
     <div class="wrap grid grid--2" style="align-items:start">
-      <div class="stack"><div class="photo-ph" style="max-width:320px">[Portrait]</div><p class="eyebrow">Your lawyer</p><h3>{l.name}</h3><p class="muted small">{l.role}</p><p class="small muted" set:html={ph('[X] years in practice · [Languages] · Ordem dos Advogados nº [—]')} /></div>
+      <div class="stack"><Photo id={l.photo} alt={`Portrait of ${l.name}`} label="[Portrait]" w={640} style="max-width:320px" /><p class="eyebrow">Your lawyer</p><h3>{l.name}</h3><p class="muted small">{l.role}</p><p class="small muted" set:html={ph(l.meta)} /></div>
       <div class="stack"><h2 style="font-size:30px">Questions clients ask</h2><div>{s.faq.map(([q, a]) => <details><summary>{q}</summary><p set:html={ph(a)} /></details>)}</div></div>
     </div>
   </section>

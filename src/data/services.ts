@@ -1,4 +1,4 @@
-// Service pages. Text in [square brackets] is shown highlighted on the site until the lawyers confirm it.
+// Service pages. Text in [label|sample] brackets is shown highlighted until the lawyers confirm it. With PUBLIC_SAMPLE=1 the sample after | is shown instead.
 export type Row = string[];
 export type Service = {
   slug: string; area: string; title: string; short: string; intro: string; lawyer: string;
@@ -6,15 +6,15 @@ export type Service = {
   table?: { head: string[]; rows: Row[]; note?: string };
   fit?: string[]; other?: [string, string][];
   steps: [string, string][];
-  fees: Row[];
+  fees: Row[]; fee?: string;
   faq: [string, string][];
 };
 
-const commonFees = (main = 'from €[X]'): Row[] => [
+const commonFees = (main: string): Row[] => [
   ['First call, 20 minutes', 'Free', 'No commitment'],
-  ['Strategy session, 60 minutes', '€[X]', 'Credited in full if you engage us'],
+  ['Strategy session, 60 minutes', '€[X|450]', 'Credited in full if you engage us'],
   ['HBB fee', main, 'Fixed in your engagement letter'],
-  ['Official fees', '€[—]', 'Paid to the authorities, listed with their source'],
+  ['Official fees', '[€—|Set by the authorities]', 'Paid to the authorities, listed with their source'],
 ];
 
 export const areas = [
@@ -31,14 +31,14 @@ export const services: Service[] = [
     title: 'Golden Visa & investor residency',
     short: 'EU residence through a qualifying investment, with limited time required in Portugal.',
     intro: 'EU residence for you and your family through a qualifying investment, with limited time required in Portugal. We structure the investment, the application and your tax position as one plan, independently.',
-    glance: [['Qualifying investment', 'from €[—], by route'], ['Time in Portugal', '[X days per period]'], ['Family included', '[spouse, children, parents]'], ['Indicative timeline', '[X–Y months]'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Qualifying investment', 'from €[—|250,000], by route'], ['Time in Portugal', '[X days per period|7 days in year one, then 14 every two years]'], ['Family included', '[spouse, children, parents|Spouse, children, dependent parents]'], ['Indicative timeline', '[X–Y months|12–24 months]'], ['Our fee', 'from €[X|4,500], fixed']],
     table: {
       head: ['Route', 'Minimum', 'What to consider', 'Source'],
       rows: [
-        ['Investment fund units', '€[—]', 'Fund fees, lock-up period, exit terms', '[Law, article]'],
-        ['Company incorporation or capital, with job creation', '€[—] + [X] jobs', 'Hiring obligations during the residence period', '[Law, article]'],
-        ['Scientific research', '€[—]', 'Eligible institutions only', '[Law, article]'],
-        ['Arts and cultural heritage', '€[—]', 'A donation, not an investment you recover', '[Law, article]'],
+        ['Investment fund units', '€[—|500,000]', 'Fund fees, lock-up period, exit terms', '[Law, article|Law 23/2007, art. 3]'],
+        ['Company incorporation or capital, with job creation', '€[—|500,000] + [X|5] jobs', 'Hiring obligations during the residence period', '[Law, article|Law 23/2007, art. 3]'],
+        ['Scientific research', '€[—|500,000]', 'Eligible institutions only', '[Law, article|Law 23/2007, art. 3]'],
+        ['Arts and cultural heritage', '€[—|250,000]', 'A donation, not an investment you recover', '[Law, article|Law 23/2007, art. 3]'],
         ['Buying residential property', '—', 'No longer a qualifying route since 2023', 'Law 56/2023'],
       ],
       note: 'We do not sell funds or properties and receive no commissions from them. We review fund documentation, fees and exit terms on your behalf.',
@@ -46,10 +46,10 @@ export const services: Service[] = [
     fit: ['You want EU residence without living in Portugal full time', 'You are ready to make a qualifying investment', 'You want to include your spouse, children or parents', 'You are thinking about citizenship in the long term'],
     other: [['You will live here most of the year on passive income', 'd7-visa'], ['You work remotely for clients or an employer abroad', 'd8-visa'], ['You are founding or moving a company', 'd2-visa']],
     steps: [['Free first call, then investment review', 'The route that fits your assets, family and tax position.'], ['Tax number, bank account and due diligence', 'NIF, Portuguese account and legal checks on the investment.'], ['Application', 'Documents, translations and submission to AIMA, with an update at each stage.'], ['Biometrics, card and renewals', 'We accompany your appointment and track every renewal date for you.']],
-    fees: commonFees(),
+    fees: [...commonFees('from €[X|4,500]'), ['Each family member', 'from €[X|1,200]', 'Fixed in your engagement letter']], fee: '4,500',
     faq: [
-      ['Can I still qualify by buying property?', 'No. Property purchase routes were removed in 2023. [Lawyers to confirm wording: how property can sit alongside another route.]'],
-      ['How long until citizenship?', 'The nationality law changed in 2026: the residence period is now longer and counts from your first residence permit. [Lawyers to confirm the exact wording for this page.]'],
+      ['Can I still qualify by buying property?', 'No. Property purchase routes were removed in 2023. [Lawyers to confirm wording: how property can sit alongside another route.|You can still buy a home here, but separately from the investment that gives you residence.]'],
+      ['How long until citizenship?', 'The nationality law changed in 2026: the residence period is now longer and counts from your first residence permit. [Lawyers to confirm the exact wording for this page.|It is 10 years (7 for EU and CPLP citizens), plus A2 Portuguese and a civic assessment.]'],
       ['Will I become tax resident in Portugal?', 'Not automatically. Residence and tax residence are different, and our tax lawyer reviews your position before you invest.'],
       ['Can you guarantee approval or timing?', 'No. Decisions and timelines belong to the authorities. We make sure your application is complete and correct.'],
       ['Do you receive commissions from funds?', 'No. Our only fee is the one you pay us.'],
@@ -60,55 +60,55 @@ export const services: Service[] = [
     title: 'D7 visa (passive income)',
     short: 'For people who will live in Portugal on pensions, investments or rental income.',
     intro: 'The D7 is for people who will live in Portugal most of the year on passive income: pensions, investments, dividends or rental income. We prepare the consular application, the AIMA appointment and your tax position on arrival.',
-    glance: [['Income required', '[€X per month, main applicant]'], ['Time in Portugal', 'Most of the year'], ['Family included', '[spouse, children, parents]'], ['Indicative timeline', '[X–Y months]'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Income required', '[€X per month, main applicant|€920 per month, main applicant]'], ['Time in Portugal', 'Most of the year'], ['Family included', '[spouse, children, parents|Spouse, children, dependent parents]'], ['Indicative timeline', '[X–Y months|4–8 months]'], ['Our fee', 'from €[X|2,500], fixed']],
     fit: ['You will live in Portugal most of the year', 'Your income is passive: pension, investments, rent', 'You want your tax position settled before you arrive'],
     other: [['You want residence without living here full time', 'golden-visa'], ['You work remotely', 'd8-visa']],
     steps: [['Free first call', 'We confirm the D7 fits and list your documents.'], ['NIF, bank account and accommodation', 'The three things the consulate checks first.'], ['Consular application', 'We prepare and review every document before you submit.'], ['AIMA appointment and residence card', 'We prepare you for the appointment and track renewals.']],
-    fees: commonFees(),
-    faq: [['How much income do I need?', '[Lawyers to confirm the current threshold and how it is calculated per family member.]'], ['Can I work on a D7?', '[Lawyers to confirm.]'], ['Will I pay tax in Portugal?', 'Usually yes, once you become tax resident. Our tax lawyer reviews your position before you move.']],
+    fees: commonFees('from €[X|2,500]'), fee: '2,500',
+    faq: [['How much income do I need?', '[Lawyers to confirm the current threshold and how it is calculated per family member.|The Portuguese minimum wage for the main applicant, plus 50% for a spouse and 30% for each child.]'], ['Can I work on a D7?', '[Lawyers to confirm.|Some work is possible, but the visa is built on passive income. We check your case in the first call.]'], ['Will I pay tax in Portugal?', 'Usually yes, once you become tax resident. Our tax lawyer reviews your position before you move.']],
   },
   {
     slug: 'd8-visa', area: 'residency', lawyer: 'florbela-lopes',
     title: 'D8 visa (remote work)',
     short: 'For remote workers earning from clients or an employer abroad.',
     intro: 'The D8 is for people who work remotely for clients or an employer outside Portugal. There is a temporary stay option and a residence option; we help you choose and prepare the right one.',
-    glance: [['Income required', '[€X per month]'], ['Options', 'Temporary stay or residence'], ['Family included', '[spouse, children]'], ['Indicative timeline', '[X–Y months]'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Income required', '[€X per month|€3,680 per month]'], ['Options', 'Temporary stay or residence'], ['Family included', '[spouse, children|Spouse and children]'], ['Indicative timeline', '[X–Y months|3–6 months]'], ['Our fee', 'from €[X|2,900], fixed']],
     fit: ['You work for an employer or clients abroad', 'You can prove regular income', 'You plan to base yourself in Portugal'],
     other: [['You are setting up your own company here', 'd2-visa'], ['Your income is passive', 'd7-visa']],
     steps: [['Free first call', 'Temporary stay or residence: we choose with you.'], ['Documents', 'Contracts, income proof, NIF and accommodation.'], ['Consular application', 'Prepared and reviewed by your lawyer.'], ['AIMA and tax', 'Residence card, then your tax registration.']],
-    fees: commonFees(),
-    faq: [['Where will I pay income tax?', 'It depends on your tax residence and contracts. We review it before you move.'], ['Can my family come with me?', '[Lawyers to confirm wording.]']],
+    fees: commonFees('from €[X|2,900]'), fee: '2,900',
+    faq: [['Where will I pay income tax?', 'It depends on your tax residence and contracts. We review it before you move.'], ['Can my family come with me?', '[Lawyers to confirm wording.|Yes, through family reunification once you hold your residence permit.]']],
   },
   {
     slug: 'd2-visa', area: 'company', lawyer: 'diogo-pedro',
     title: 'D2 visa (entrepreneurs)',
     short: 'For founders starting or moving a company to Portugal.',
     intro: 'The D2 is for founders and independent professionals who start or move a business to Portugal. We set up the company, prepare the business case and plan your tax position together.',
-    glance: [['Investment', '[no fixed minimum: lawyers to confirm wording]'], ['Business plan', 'Required'], ['Family included', '[spouse, children]'], ['Indicative timeline', '[X–Y months]'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Investment', '[no fixed minimum: lawyers to confirm wording|No fixed minimum]'], ['Business plan', 'Required'], ['Family included', '[spouse, children|Spouse and children]'], ['Indicative timeline', '[X–Y months|6–10 months]'], ['Our fee', 'from €[X|3,500], fixed']],
     fit: ['You are founding or moving a company', 'You can show means to support yourself', 'You want company and tax set up together'],
     other: [['You work remotely for others', 'd8-visa'], ['You prefer an investment route', 'golden-visa']],
     steps: [['Free first call', 'Is the D2 the right vehicle for your business?'], ['Company set-up', 'Incorporation, bank account, accountant.'], ['Business case and application', 'Prepared with you and reviewed before submission.'], ['Residence card and tax', 'AIMA appointment and your tax registration.']],
-    fees: commonFees(),
-    faq: [['Do I need to hire employees?', '[Lawyers to confirm.]'], ['Can I apply for IFICI?', 'Possibly, depending on your activity. We check eligibility in the first call.']],
+    fees: commonFees('from €[X|3,500]'), fee: '3,500',
+    faq: [['Do I need to hire employees?', '[Lawyers to confirm.|Not necessarily, but a plan that creates value in Portugal makes a stronger application.]'], ['Can I apply for IFICI?', 'Possibly, depending on your activity. We check eligibility in the first call.']],
   },
   {
     slug: 'citizenship', area: 'residency', lawyer: 'leandro-nogueira',
     title: 'Citizenship & permanent residence',
     short: 'Nationality by residence, descent or marriage, and long-term residence.',
     intro: 'Since 19 May 2026 the residence period for citizenship is longer and counts from your first residence permit. We review where you stand and prepare your application when you qualify.',
-    glance: [['Residence period', '[7 years EU/CPLP, 10 years others: lawyers to confirm]'], ['Language', 'Portuguese, A2 level'], ['Other requirements', 'Civic assessment, clean record'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Residence period', '[7 years EU/CPLP, 10 years others: lawyers to confirm|10 years (7 for EU and CPLP)]'], ['Language', 'Portuguese, A2 level'], ['Other requirements', 'Civic assessment, clean record'], ['Our fee', 'from €[X|1,800], fixed']],
     steps: [['Free first call', 'We check your dates and which rules apply to you.'], ['Documents', 'Records, certificates and translations.'], ['Application', 'Submitted and followed until the decision.']],
-    fees: commonFees(),
-    faq: [['I applied before May 2026. Which rules apply?', 'Applications filed before 19 May 2026 continue under the previous rules. [Lawyers to confirm wording.]'], ['Can I become a citizen by descent?', '[Lawyers to confirm.]']],
+    fees: commonFees('from €[X|1,800]'), fee: '1,800',
+    faq: [['I applied before May 2026. Which rules apply?', 'Applications filed before 19 May 2026 continue under the previous rules. [Lawyers to confirm wording.|]'], ['Can I become a citizen by descent?', '[Lawyers to confirm.|Children and grandchildren of Portuguese citizens can apply. We check your family records first.]']],
   },
   {
     slug: 'tax', area: 'tax', lawyer: 'diogo-pedro',
     title: 'Tax & wealth on arrival',
     short: 'Tax residence, IFICI, exits and cross-border income, planned before you move.',
     intro: 'The best time to plan your taxes is before you arrive. We look at your income, assets and the year you become tax resident, and set out what to do and when.',
-    glance: [['When to start', 'Before you move'], ['Special regime', 'IFICI, if your activity qualifies'], ['Our fee', 'from €[X], fixed']],
+    glance: [['When to start', 'Before you move'], ['Special regime', 'IFICI, if your activity qualifies'], ['Our fee', 'from €[X|1,500], fixed']],
     steps: [['Free first call', 'Your income, assets and timing.'], ['Tax plan', 'In writing, with the order of steps.'], ['Registration and filings', 'NIF, tax residence, IFICI and annual returns.']],
-    fees: commonFees(),
+    fees: commonFees('from €[X|1,500]'), fee: '1,500',
     faq: [['Does the NHR still exist?', 'No. It closed to new residents and was replaced by IFICI, which is narrower.'], ['When do I become tax resident?', 'It depends on your days in Portugal and your habitual residence. We check it with you.']],
   },
   {
@@ -116,20 +116,20 @@ export const services: Service[] = [
     title: 'Property',
     short: 'Buying a home or investment property safely.',
     intro: 'From the first offer to the deed, we check the property, the contracts and the taxes, so you know exactly what you are buying.',
-    glance: [['Includes', 'Due diligence, CPCV, deed'], ['Taxes on purchase', 'IMT and stamp duty'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Includes', 'Due diligence, CPCV, deed'], ['Taxes on purchase', 'IMT and stamp duty'], ['Our fee', 'from €[X|2,000], fixed']],
     steps: [['Free first call', 'Your plans and budget.'], ['Due diligence', 'Registry, licences, debts and charges.'], ['Contracts and deed', 'Promissory contract, then the deed.']],
-    fees: commonFees(),
-    faq: [['Can I buy before I have residence?', 'Yes. You only need a NIF. [Lawyers to confirm wording.]'], ['Does buying give me a Golden Visa?', 'No. Property purchase stopped qualifying in 2023.']],
+    fees: commonFees('from €[X|2,000]'), fee: '2,000',
+    faq: [['Can I buy before I have residence?', 'Yes. You only need a NIF. [Lawyers to confirm wording.|]'], ['Does buying give me a Golden Visa?', 'No. Property purchase stopped qualifying in 2023.']],
   },
   {
     slug: 'succession', area: 'succession', lawyer: 'margarida-tempera',
     title: 'Succession & estate',
     short: 'Wills and inheritance across borders.',
     intro: 'Portuguese inheritance rules can apply to you once you live here. We help you choose the law that governs your estate, write the right will and plan across countries.',
-    glance: [['Includes', 'Wills, choice of law, gifts'], ['Our fee', 'from €[X], fixed']],
+    glance: [['Includes', 'Wills, choice of law, gifts'], ['Our fee', 'from €[X|900], fixed']],
     steps: [['Free first call', 'Your family, assets and countries involved.'], ['Plan', 'Choice of law and the documents you need.'], ['Documents', 'Will and supporting acts, signed in Portugal.']],
-    fees: commonFees(),
-    faq: [['Can I keep my home country\'s inheritance law?', 'Often yes, under the EU Succession Regulation. [Lawyers to confirm wording.]']],
+    fees: commonFees('from €[X|900]'), fee: '900',
+    faq: [['Can I keep my home country\'s inheritance law?', 'Often yes, under the EU Succession Regulation. [Lawyers to confirm wording.|]']],
   },
 ];
 

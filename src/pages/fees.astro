@@ -13,12 +13,12 @@ import { ph } from '../data/ph';
         <tr><th>Service</th><th>From</th><th>Notes</th></tr>
         <tr><td>First call, 20 minutes</td><td>Free</td><td>No commitment</td></tr>
         <tr><td>Strategy session, 60 minutes</td><td set:html={ph(site.strategySessionPrice)} /><td>Credited in full if you engage us</td></tr>
-        {services.map((s) => <tr><td><a href={`/services/${s.slug}/`}>{s.title}</a></td><td set:html={ph('€[X]')} /><td>Fixed, main applicant or main matter</td></tr>)}
+        {services.map((s) => <tr><td><a href={`/services/${s.slug}/`}>{s.title}</a></td><td set:html={ph(`€[X|${s.fee}]`)} /><td>Fixed, main applicant or main matter</td></tr>)}
       </table></div>
       <div class="grid">
         <div class="stack"><h3>What is always included</h3><p class="muted">Your lawyer's time, document review, submissions and updates at every stage.</p></div>
         <div class="stack"><h3>What is never included</h3><p class="muted">Official fees, translations and apostilles. We list them up front with their source.</p></div>
-        <div class="stack"><h3>How you pay</h3><p class="muted" set:html={ph('[Instalments and timing to be confirmed by the partners.]')} /></div>
+        <div class="stack"><h3>How you pay</h3><p class="muted" set:html={ph('[Instalments and timing to be confirmed by the partners.|Half when you sign the engagement letter, half when we submit your application.]')} /></div>
       </div>
     </div>
   </section>

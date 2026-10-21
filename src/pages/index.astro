@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import BookBlock from '../components/BookBlock.astro';
+import Photo from '../components/Photo.astro';
 import { areas } from '../data/services';
 import { team } from '../data/team';
 import { site } from '../data/site';
@@ -26,7 +27,7 @@ const areaLink: Record<string, string> = { residency: '/services/golden-visa/', 
           <li>First call free, 20 minutes</li>
         </ul>
       </div>
-      <div class="photo-ph hero__img">[Commissioned photography: partners in the Lisbon office. No stock images.]</div>
+      <Photo id="1585208798174-6cedd86e019a" alt="A yellow tram in a Lisbon street" label="[Commissioned photography: partners in the Lisbon office. No stock images.]" class="hero__img" w={1100} />
     </div>
   </section>
 
@@ -48,7 +49,7 @@ const areaLink: Record<string, string> = { residency: '/services/golden-visa/', 
         <div class="stack"><h3>Trained in international cases</h3><p class="muted">Our lawyers come from Lisbon practices advising foreign clients on residency and tax.</p></div>
         <div class="stack"><h3>A lawyer on every case</h3><p class="muted">Registered with the Portuguese Bar, from the first call to the residence card.</p></div>
         <div class="stack"><h3>A small team, by choice</h3><p class="muted">We take on a limited number of clients so each one gets real attention.</p></div>
-        <div class="stack"><h3>In your language</h3><p class="muted" set:html={ph('Advice in English and Portuguese [and other languages].')} /></div>
+        <div class="stack"><h3>In your language</h3><p class="muted" set:html={ph('Advice in [English and Portuguese, and other languages|English, Portuguese, French, Spanish and Italian].')} /></div>
       </div>
     </div>
   </section>
@@ -79,7 +80,7 @@ const areaLink: Record<string, string> = { residency: '/services/golden-visa/', 
     <div class="wrap stack" style="gap:40px">
       <div class="stack"><p class="eyebrow">Our lawyers</p><h2>You will know who is handling your case.</h2></div>
       <div class="grid">
-        {team.map((l) => <div class="stack" style="gap:12px"><div class="photo-ph">[Portrait]</div><h3>{l.name}</h3><p class="small eyebrow" style="letter-spacing:.12em">{l.role}</p><p class="small muted" set:html={ph('[X] years in practice · [Languages] · Ordem dos Advogados nº [—]')} /></div>)}
+        {team.map((l) => <div class="stack" style="gap:12px"><Photo id={l.photo} alt={`Portrait of ${l.name}`} label="[Portrait]" w={600} /><h3>{l.name}</h3><p class="small eyebrow" style="letter-spacing:.12em">{l.role}</p><p class="small muted" set:html={ph(l.meta)} /></div>)}
       </div>
       <a href="/team/">Meet the team →</a>
     </div>
@@ -92,7 +93,7 @@ const areaLink: Record<string, string> = { residency: '/services/golden-visa/', 
         <tr><th>Service</th><th>What you get</th><th>Fee</th></tr>
         <tr><td>First call</td><td>20 minutes with a lawyer · your situation and the routes open to you</td><td>Free</td></tr>
         <tr><td>Strategy session</td><td>60 minutes with a partner · a concrete plan, costs and order of steps · credited in full if you engage us</td><td set:html={ph(site.strategySessionPrice)} /></tr>
-        <tr><td>Residency engagements</td><td>Main applicant, fixed fee · family members quoted separately</td><td set:html={ph('from €[X]')} /></tr>
+        <tr><td>Residency engagements</td><td>Main applicant, fixed fee · family members quoted separately</td><td set:html={ph('from €[X|2,500]')} /></tr>
         <tr><td>Combined residency, tax &amp; property plan</td><td>Quoted after your first call or strategy session</td><td>On proposal</td></tr>
       </table></div>
     </div>
@@ -104,7 +105,7 @@ const areaLink: Record<string, string> = { residency: '/services/golden-visa/', 
     <div class="wrap stack" style="gap:32px">
       <div class="stack"><p class="eyebrow">Insights</p><h2>Clear answers, checked by a lawyer.</h2></div>
       <div class="grid">
-        {posts.length ? posts.map((p) => <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none"><p class="eyebrow" style="letter-spacing:.12em">{p.data.category}</p><h3>{p.data.title}</h3><p class="small muted">{p.data.author} · {p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p></a>) : <p class="muted">Articles coming soon.</p>}
+        {posts.length ? posts.map((p) => <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none">{p.data.image && <Photo id={p.data.image} alt="" label="" ratio="16 / 10" w={700} />}<p class="eyebrow" style="letter-spacing:.12em">{p.data.category}</p><h3>{p.data.title}</h3><p class="small muted">{p.data.author} · {p.data.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p></a>) : <p class="muted">Articles coming soon.</p>}
       </div>
     </div>
   </section>

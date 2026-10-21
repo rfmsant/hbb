@@ -20,5 +20,6 @@ collections:
       - { label: Category, name: category, widget: select, options: [Residency, Tax, Property, Business, Succession, Living] }
       - { label: Author, name: author, widget: string }
       - { label: Reviewed by (lawyer), name: reviewedBy, widget: string, required: false }
+      - { label: Image (optional), name: image, widget: string, required: false }
       - { label: Draft, name: draft, widget: boolean, default: true }
       - { label: Body, name: body, widget: markdown }

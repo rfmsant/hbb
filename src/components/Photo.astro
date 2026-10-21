@@ -1,0 +1,9 @@
+---
+import { SAMPLE, stock } from '../data/ph';
+interface Props { id?: string; alt: string; label: string; ratio?: string; w?: number; class?: string; style?: string }
+const { id, alt, label, ratio = '4 / 5', w = 900, style = '' } = Astro.props;
+---
+{SAMPLE && id
+  ? <img class={`photo ${Astro.props.class ?? ''}`} src={stock(id, w)} alt={alt} loading="lazy" style={`aspect-ratio:${ratio};${style}`}>
+  : <div class={`photo-ph ${Astro.props.class ?? ''}`} style={`aspect-ratio:${ratio};${style}`}>{label}</div>}
+<style>.photo { width: 100%; object-fit: cover; background: var(--ivory); }</style>

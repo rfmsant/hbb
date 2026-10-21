@@ -26,3 +26,8 @@ Astro static site, hosted on Cloudflare Pages. Blog edited through Decap CMS at 
 booking_start · question_answered (question_number 1–6) · call_type_selected · details_submitted · booking_completed · cta_click.
 In GA4, build a funnel exploration with these steps to see where people drop off. Any step losing more than 10–15% gets cut or simplified.
 Analytics only loads after cookie consent (Consent Mode v2).
+
+## Preview mode (sample content)
+The GitHub Pages preview builds with PUBLIC_SAMPLE=1: stock photos from Unsplash and sample figures replace the placeholders, with a thin "Preview" bar on top.
+Placeholders are written as [label|sample] in the source. Without PUBLIC_SAMPLE they show highlighted in yellow, so nothing unconfirmed can go live unnoticed.
+Remove PUBLIC_SAMPLE from the workflow (and replace every [label|sample]) before the real launch.

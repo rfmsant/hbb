@@ -3,13 +3,14 @@ import Base from '../layouts/Base.astro';
 import BookBlock from '../components/BookBlock.astro';
 import { team } from '../data/team';
 import { ph } from '../data/ph';
+import Photo from '../components/Photo.astro';
 ---
 <Base title="Our lawyers" description="The lawyers who will lead your case: immigration, tax, property and corporate.">
   <section class="section">
     <div class="wrap stack" style="gap:48px">
       <div class="stack"><p class="eyebrow">Our lawyers</p><h1>You will know who is handling your case.</h1><p class="lead">Every case is led by a named lawyer registered with the Portuguese Bar, from the first call to the residence card.</p></div>
       <div class="grid">
-        {team.map((l) => <article class="stack" style="gap:12px" id={l.slug}><div class="photo-ph">[Portrait]</div><h2 style="font-size:26px">{l.name}</h2><p class="eyebrow" style="letter-spacing:.12em">{l.role}</p><p class="muted small">Areas: {l.areas.join(', ')}</p><p class="small muted" set:html={ph('[Short bio: training, previous practice, typical clients.] [X] years in practice · [Languages] · Ordem dos Advogados nº [—]')} /></article>)}
+        {team.map((l) => <article class="stack" style="gap:12px" id={l.slug}><Photo id={l.photo} alt={`Portrait of ${l.name}`} label="[Portrait]" w={700} /><h2 style="font-size:26px">{l.name}</h2><p class="eyebrow" style="letter-spacing:.12em">{l.role}</p><p class="muted small">Areas: {l.areas.join(', ')}</p><p class="small muted" set:html={ph(`${l.bio} ${l.meta}`)} /></article>)}
       </div>
     </div>
   </section>

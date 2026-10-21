@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import { ph } from '../data/ph';
 ---
 <Base title="Privacy policy" description="How HBB collects, uses and protects personal data, including the answers you give when booking a call." noindex>
   <section class="section"><div class="wrap prose">
     <h1>Privacy policy</h1>
     <p>How HBB collects, uses and protects personal data, including the answers you give when booking a call.</p>
-    <p><span class="ph">[Full text to be written and approved by the partners before launch.]</span></p>
+    <p><span set:html={ph('[Full text to be written and approved by the partners before launch.|Sample text for the preview. The final text will be written and approved by the partners before launch.]')} /></p>
   </div></section>
 </Base>

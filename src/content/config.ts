@@ -9,6 +9,7 @@ const insights = defineCollection({
     author: z.string(),
     reviewedBy: z.string().optional(),
     draft: z.boolean().default(true),
+    image: z.string().optional(),
   }),
 });
 export const collections = { insights };

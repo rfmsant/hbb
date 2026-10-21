@@ -2,10 +2,11 @@
 import Base from '../layouts/Base.astro';
 import { team } from '../data/team';
 import { site } from '../data/site';
+import { SAMPLE } from '../data/ph';
 const lawyers = Object.fromEntries(team.map((l) => [l.slug, { name: l.name, role: l.role, bookingUrl: l.bookingUrl }]));
 ---
 <Base title="Book a call" description="Six short questions, then choose a time with the lawyer who would lead your case.">
-  <script is:inline define:vars={{ lawyers, price: site.strategySessionPrice }}>window.__HBB = { lawyers, price };</script>
+  <script is:inline define:vars={{ lawyers, price: site.strategySessionPrice, sample: SAMPLE }}>window.__HBB = { lawyers, price, sample };</script>
   <section class="section section--paper book">
     <div class="wrap">
       <div class="panel" id="app" aria-live="polite">
@@ -18,7 +19,8 @@ const lawyers = Object.fromEntries(team.map((l) => [l.slug, { name: l.name, role
 <script>
   import { track } from '../scripts/analytics';
   type L = { name: string; role: string; bookingUrl: string };
-  const { lawyers, price } = (window as any).__HBB as { lawyers: Record<string, L>; price: string };
+  const { lawyers, price: rawPrice, sample } = (window as any).__HBB as { lawyers: Record<string, L>; price: string; sample: boolean };
+  const price = rawPrice.replace(/\[([^\]|]+)(?:\|([^\]]*))?\]/g, (_m: string, l: string, s?: string) => (sample && s !== undefined ? s : `[${l}]`));
 
   const Q = [
     { q: 'What matters most in your move?', o: ['EU residence for my family, without living here full time', 'Living in Portugal most of the year', 'Moving or starting a company', 'Planning my taxes before I move'] },
@@ -96,7 +98,7 @@ const lawyers = Object.fromEntries(team.map((l) => [l.slug, { name: l.name, role
           <p class="small muted">Booked? <button type="button" class="linkbtn" data-done>Show my confirmation</button></p>`;
       } else {
         const days = ['Monday', 'Tuesday', 'Wednesday'];
-        h = `<p class="eyebrow">Choose a time</p><h1 class="q">Pick a time with ${r.lawyer.name}.</h1><p class="small"><span class="ph">[Demo slots. At launch this shows ${r.lawyer.name}'s live calendar.]</span></p>
+        h = `<p class="eyebrow">Choose a time</p><h1 class="q">Pick a time with ${r.lawyer.name}.</h1>${sample ? '<p class="small muted">All times in Lisbon time.</p>' : `<p class="small"><span class="ph">[Demo slots. At launch this shows ${r.lawyer.name}'s live calendar.]</span></p>`}
           ${days.map((d) => `<div class="day"><p><b>${d}</b> · Lisbon time</p><div class="slots">${['09:00', '13:30', '18:00', '20:30'].map((t) => `<button type="button" class="slot" data-slot="${d}, ${t}">${t}</button>`).join('')}</div></div>`).join('')}`;
       }
       h += back(DETAILS);

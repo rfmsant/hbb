@@ -17,6 +17,7 @@ jobs:
       SITE_URL: https://rfmsant.github.io
       BASE_PATH: /hbb
       PUBLIC_NOINDEX: '1'
+      PUBLIC_SAMPLE: '1'   # preview only: stock photos and sample figures. Remove for the real launch.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

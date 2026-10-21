@@ -4,30 +4,27 @@ description: "Which investments qualify for the Golden Visa today, what each one
 date: 2026-12-15
 category: Residency
 author: "Florbela Lopes"
+image: "1558102400-72da9fdbecae"
 draft: false
 ---
 
-**[Draft outline. To be written and checked by the lawyer before launch.]**
+*Sample article for the website preview. The final text will be written and checked by the lawyer.*
 
-## The short answer
+The Golden Visa still gives investors and their families EU residence with little time required in Portugal. What changed is how you qualify: since 2023, buying a home no longer counts.
 
-[One paragraph: the routes that qualify today, with the source for each minimum.]
+## The routes that remain
 
-## The routes, one by one
+- **Investment fund units.** The most common route today. Check the fund's fees, lock-up period and exit terms before you subscribe.
+- **Company capital with job creation.** Suits investors who want an active business in Portugal.
+- **Scientific research.** Through eligible research institutions.
+- **Arts and cultural heritage.** A donation, not an investment you get back.
 
-- Investment fund units: [minimum, what to check]
-- Company capital with job creation: [minimum, obligations]
-- Scientific research: [minimum, eligible institutions]
-- Arts and cultural heritage: [minimum]
+## What changed for citizenship
 
-## What no longer qualifies
+Since 19 May 2026, the path to citizenship is longer: 10 years of legal residence (7 for EU and CPLP citizens), counted from your first residence permit.
 
-Buying residential property stopped qualifying in 2023 (Law 56/2023).
+## Our view
 
-## What changed for citizenship in 2026
+Choose the route for your assets and your tax position, not for the brochure. We do not sell funds and take no commissions, so our review is independent.
 
-[Residence period and how it is counted since 19 May 2026.]
-
-## Talk it through
-
-If you are comparing routes, [book a free 20-minute call](/book/). We do not sell funds and take no commissions.
+[Book a free 20-minute call](/book/) to compare the routes for your case.

@@ -3,10 +3,10 @@ title: "Portuguese inheritance rules for international families"
 description: "Forced heirship, choosing your home country's law and making a will that works in Portugal."
 date: 2026-12-05
 category: Succession
-author: "Margarida Tempera"
+author: "HBB"
 image: "1533421821268-87e42c1d70b0"
 updated: 2026-12-15
-draft: false
+draft: true
 ---
 
 *Sample article for the website preview. The final text will be written and checked by the lawyer.*
@@ -25,4 +25,4 @@ Under the EU Succession Regulation, you can choose the law of your nationality i
 
 A Portuguese will, or a foreign will that clearly makes that choice, avoids uncertainty for your family later.
 
-[Book a free 20-minute call](/book/) to review your situation.
+[Book an initial meeting](/book/) to review your situation.

@@ -1,0 +1,201 @@
+---
+import Base from '../layouts/Base.astro';
+import { areas } from '../data/areas';
+import { site, calendars } from '../data/site';
+import { SAMPLE } from '../data/ph';
+import { plain } from '../lib/text';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const pt = lang === 'pt';
+const A = areas.map((a) => ({ slug: a.slug, cal: a.cal, title: a.title[lang], titleEn: a.title.en, matters: a.matters[lang], prepare: a.prepare[lang] }));
+const S = {
+  en: {
+    eyebrow: 'Book an initial meeting', intro: 'Six short questions, so the lawyer for the area arrives prepared. About two minutes.',
+    q: ['Who is the meeting for?', 'Which area is it about?', 'What is it about?', 'Is there a deadline?', 'How would you like to meet?', 'In which language?'],
+    aud: ['A company', 'Myself or my family'], unsure: 'I am not sure', other: 'Something else',
+    deadline: ['Yes, within the next two weeks', 'Yes, within the next few months', 'No fixed deadline'],
+    format: ['Video call', 'Phone call', 'In person, in Lisbon'], language: ['Portuguese', 'English'],
+    of: 'Question {i} of {n}', back: '← Back',
+    detailsEyebrow: 'Your details', detailsTitle: 'Who should we expect?',
+    name: 'Full name', email: 'Email', phone: 'Phone', company: 'Company', country: 'Country you live in now', msg: 'Anything the lawyer should know before the meeting?', optional: '(optional)',
+    consent: 'I agree that HBB uses my answers to prepare the meeting, as described in the', privacy: 'privacy policy', news: 'Send me occasional legal updates by email.',
+    cont: 'Continue to choose a time', errName: 'Please enter your name.', errEmail: 'Please enter a valid email address, so we can send your confirmation.', errConsent: 'Please accept the privacy terms to continue.',
+    timesEyebrow: 'Choose a time', timesTitle: 'Choose a date and time.', lisbon: 'All times in Lisbon time.', demo: '[Demo times. At launch this shows the live calendar of the lawyer for the area.]', days: ['Monday', 'Tuesday', 'Wednesday'],
+    booked: 'Booked?', showConf: 'Show my confirmation',
+    doneEyebrow: 'Request received', doneTitle: 'See you {when}, {name}.', soon: 'soon',
+    lArea: 'Area', lTopic: 'Subject', lFormat: 'Format', lLang: 'Language', have: 'Have at hand',
+    genericPrep: ['Any documents related to the matter', 'A short note with the key dates and the people involved'],
+    doneText: 'A confirmation email is on its way with the details of the meeting and, for video calls, the link. Need another time? Use the link in that email.',
+    homeBtn: 'Back to the homepage', aside: 'Your answers are confidential and only used to prepare the meeting.',
+  },
+  pt: {
+    eyebrow: 'Marcar primeira reunião', intro: 'Seis perguntas curtas, para que a advogada da área chegue preparada. Cerca de dois minutos.',
+    q: ['Para quem é a reunião?', 'Qual é a área?', 'Qual é o assunto?', 'Há algum prazo?', 'Como prefere a reunião?', 'Em que língua?'],
+    aud: ['Uma empresa', 'Para mim ou para a minha família'], unsure: 'Não sei', other: 'Outro assunto',
+    deadline: ['Sim, nas próximas duas semanas', 'Sim, nos próximos meses', 'Sem prazo definido'],
+    format: ['Videochamada', 'Telefone', 'Presencial, em Lisboa'], language: ['Português', 'Inglês'],
+    of: 'Pergunta {i} de {n}', back: '← Voltar',
+    detailsEyebrow: 'Os seus dados', detailsTitle: 'Quem devemos esperar?',
+    name: 'Nome completo', email: 'Email', phone: 'Telefone', company: 'Empresa', country: 'País onde vive atualmente', msg: 'Há algo que a advogada deva saber antes da reunião?', optional: '(opcional)',
+    consent: 'Aceito que a HBB use as minhas respostas para preparar a reunião, nos termos da', privacy: 'política de privacidade', news: 'Quero receber, por email, atualizações jurídicas ocasionais.',
+    cont: 'Continuar para escolher a hora', errName: 'Indique o seu nome.', errEmail: 'Indique um email válido, para lhe enviarmos a confirmação.', errConsent: 'Aceite os termos de privacidade para continuar.',
+    timesEyebrow: 'Escolha a hora', timesTitle: 'Escolha o dia e a hora.', lisbon: 'Horas de Lisboa.', demo: '[Horários de demonstração. No lançamento, aparece aqui o calendário da advogada da área.]', days: ['Segunda-feira', 'Terça-feira', 'Quarta-feira'],
+    booked: 'Já marcou?', showConf: 'Ver a confirmação',
+    doneEyebrow: 'Pedido recebido', doneTitle: 'Até {when}, {name}.', soon: 'breve',
+    lArea: 'Área', lTopic: 'Assunto', lFormat: 'Formato', lLang: 'Língua', have: 'O que convém ter à mão',
+    genericPrep: ['Documentos relacionados com o assunto', 'Uma breve nota com as datas e as pessoas envolvidas'],
+    doneText: 'Vai receber um email de confirmação com os detalhes da reunião e, se for por videochamada, o link. Precisa de outra hora? Use o link nesse email.',
+    homeBtn: 'Voltar ao início', aside: 'As suas respostas são confidenciais e servem apenas para preparar a reunião.',
+  },
+}[lang];
+const cfg = { A, S, cals: calendars, sample: SAMPLE, lang, privacy: localePath(lang, '/privacy/'), home: localePath(lang, '/') };
+---
+<Base lang={lang} path="/book/" title={S.eyebrow} description={pt ? 'Seis perguntas curtas e depois escolha a data da primeira reunião com a advogada da área.' : 'Six short questions, then choose a date for an initial meeting with the lawyer for the area.'}>
+  <script is:inline define:vars={{ cfg }}>window.__HBB = cfg;</script>
+  <section class="section section--paper book">
+    <div class="wrap">
+      <div class="panel" id="app" aria-live="polite">
+        <noscript><p>{pt ? `Ative o JavaScript para marcar online, ou contacte-nos: ${plain(site.phone)} · ${plain(site.email)}` : `Please enable JavaScript to book online, or contact us: ${plain(site.phone)} · ${plain(site.email)}`}</p></noscript>
+      </div>
+      <p class="small muted aside">{S.aside} <a href={cfg.privacy}>{S.privacy}</a>.</p>
+    </div>
+  </section>
+</Base>
+<script>
+  import { track } from '../scripts/analytics';
+  type Ar = { slug: string; cal: 'cal1' | 'cal2' | 'cal3'; title: string; titleEn: string; matters: string[]; prepare: string[] };
+  const { A, S, cals, sample, lang, privacy, home } = (window as any).__HBB as { A: Ar[]; S: any; cals: Record<string, string>; sample: boolean; lang: string; privacy: string; home: string };
+  const esc = (t: string) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+  const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_m, k) => String(v[k] ?? ''));
+
+  const params = new URLSearchParams(location.search);
+  const preset = A.find((a) => a.slug === params.get('area'));
+  const st = { phase: 'q' as 'q' | 'details' | 'times' | 'done', pos: 0, aud: -1, area: preset ? preset.slug : '', topic: -1, deadline: -1, format: -1, language: lang === 'pt' ? -1 : -1,
+    name: '', email: '', phone: '', company: '', country: '', msg: '', slot: '' };
+  const app = document.getElementById('app')!;
+
+  const area = () => A.find((a) => a.slug === st.area);
+  const order = () => [0, ...(preset ? [] : [1]), ...(st.area === 'unsure' ? [] : [2]), 3, 4, 5];
+  const cal = () => (area()?.cal ?? 'cal3');
+  const opts = (q: number): string[] => q === 0 ? S.aud : q === 1 ? [...A.map((a) => a.title), S.unsure] : q === 2 ? [...(area()?.matters ?? []), S.other] : q === 3 ? S.deadline : q === 4 ? S.format : S.language;
+  const chosen = (q: number) => q === 0 ? st.aud : q === 1 ? (st.area === 'unsure' ? A.length : A.findIndex((a) => a.slug === st.area)) : q === 2 ? st.topic : q === 3 ? st.deadline : q === 4 ? st.format : st.language;
+  const answerText = (q: number) => { const i = chosen(q); return i < 0 ? '' : opts(q)[i]; };
+  const areaTitle = () => area()?.title ?? S.unsure;
+  const back = (fn: string) => `<button type="button" class="back" data-back="${fn}">${S.back}</button>`;
+
+  function render() {
+    let h = '';
+    if (st.phase === 'q') {
+      const ord = order(); const q = ord[st.pos]; const n = ord.length;
+      const bars = ord.map((_, i) => `<span class="${i < st.pos ? 'on' : ''}"></span>`).join('');
+      h = `<div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${st.pos}" aria-label="${fill(S.of, { i: st.pos + 1, n })}"><div class="bars" style="grid-template-columns:repeat(${n},1fr)">${bars}</div><p class="small muted">${fill(S.of, { i: st.pos + 1, n })}</p></div>
+        <p class="eyebrow">${S.eyebrow}</p>${preset && st.pos === 0 ? `<p class="small muted">${S.lArea}: <b>${esc(preset.title)}</b></p>` : ''}<h1 class="q" tabindex="-1">${S.q[q]}</h1>${st.pos === 0 ? `<p class="muted">${S.intro}</p>` : ''}
+        <div class="opts">${opts(q).map((o, i) => `<button type="button" class="opt ${chosen(q) === i ? 'sel' : ''}" data-ans="${i}">${esc(o)}</button>`).join('')}</div>
+        ${st.pos > 0 ? back('q') : ''}`;
+    } else if (st.phase === 'details') {
+      h = `<p class="eyebrow">${S.detailsEyebrow}</p><h1 class="q" tabindex="-1">${S.detailsTitle}</h1>
+        <form id="det" class="form" novalidate>
+          <label for="f-name">${S.name}</label><input id="f-name" name="name" autocomplete="name" required value="${esc(st.name)}">
+          <label for="f-email">${S.email}</label><input id="f-email" name="email" type="email" autocomplete="email" required value="${esc(st.email)}">
+          <label for="f-phone">${S.phone} <span class="muted">${S.optional}</span></label><input id="f-phone" name="phone" type="tel" autocomplete="tel" value="${esc(st.phone)}">
+          ${st.aud === 0 ? `<label for="f-company">${S.company}</label><input id="f-company" name="company" autocomplete="organization" value="${esc(st.company)}">` : `<label for="f-country">${S.country} <span class="muted">${S.optional}</span></label><input id="f-country" name="country" autocomplete="country-name" value="${esc(st.country)}">`}
+          <label for="f-msg">${S.msg} <span class="muted">${S.optional}</span></label><textarea id="f-msg" name="msg" rows="3">${esc(st.msg)}</textarea>
+          <label class="check"><input type="checkbox" id="f-consent" required> <span>${S.consent} <a href="${privacy}" target="_blank">${S.privacy}</a>.</span></label>
+          <label class="check"><input type="checkbox" id="f-news"> <span>${S.news}</span></label>
+          <p class="err" id="err" role="alert"></p>
+          <button class="btn btn--primary" type="submit">${S.cont}</button>
+        </form>${back('details')}`;
+    } else if (st.phase === 'times') {
+      const url = cals[cal()];
+      if (url) {
+        const u = new URL(url); u.searchParams.set('name', st.name); u.searchParams.set('email', st.email);
+        h = `<p class="eyebrow">${S.timesEyebrow}</p><h1 class="q" tabindex="-1">${S.timesTitle}</h1><iframe class="bk" src="${esc(u.toString())}" title="${S.timesEyebrow}"></iframe>
+          <p class="small muted">${S.booked} <button type="button" class="linkbtn" data-done>${S.showConf}</button></p>`;
+      } else {
+        h = `<p class="eyebrow">${S.timesEyebrow}</p><h1 class="q" tabindex="-1">${S.timesTitle}</h1>${sample ? `<p class="small muted">${S.lisbon}</p>` : `<p class="small"><span class="ph">${S.demo}</span></p>`}
+          ${S.days.map((d: string) => `<div class="day"><p><b>${d}</b></p><div class="slots">${['09:30', '12:00', '15:00', '17:30'].map((t) => `<button type="button" class="slot" data-slot="${d}, ${t}">${t}</button>`).join('')}</div></div>`).join('')}`;
+      }
+      h += back('times');
+    } else {
+      const prep = area()?.prepare ?? S.genericPrep;
+      h = `<p class="eyebrow">${S.doneEyebrow}</p><h1 class="q" tabindex="-1">${fill(S.doneTitle, { when: st.slot ? esc(st.slot) : S.soon, name: esc(st.name.split(' ')[0] || '') })}</h1>
+        <div class="res"><p><b>${S.lArea}:</b> ${esc(areaTitle())}</p>${st.topic >= 0 ? `<p><b>${S.lTopic}:</b> ${esc(answerText(2))}</p>` : ''}<p><b>${S.lFormat}:</b> ${esc(answerText(4))} · <b>${S.lLang}:</b> ${esc(answerText(5))}</p></div>
+        <p class="eyebrow" style="margin-top:8px">${S.have}</p><ul class="list">${prep.map((p: string) => `<li>${esc(p)}</li>`).join('')}</ul>
+        <p class="muted">${S.doneText}</p><a href="${home}" class="btn btn--ghost">${S.homeBtn}</a>`;
+    }
+    app.innerHTML = h;
+    (app.querySelector('h1') as HTMLElement | null)?.focus();
+  }
+
+  function sendLead() {
+    const a = area();
+    const body = {
+      lang, audience: answerText(0), area: a?.titleEn ?? 'Not sure', areaSlug: st.area, topic: st.topic >= 0 ? answerText(2) : '', deadline: answerText(3), format: answerText(4), language: answerText(5),
+      cal: cal(), priority: st.deadline === 0 ? 'High' : 'Normal', callTitle: `HBB · ${a?.titleEn ?? 'Initial meeting'} · ${st.name}`,
+      name: st.name, email: st.email, phone: st.phone, company: st.company, country: st.country, message: st.msg,
+      marketing: (document.getElementById('f-news') as HTMLInputElement | null)?.checked ?? false, page: location.href,
+    };
+    fetch('/api/lead', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).catch(() => { /* booking continues */ });
+  }
+
+  app.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!el) return;
+    if (el.dataset.ans !== undefined) {
+      const i = +el.dataset.ans; const q = order()[st.pos];
+      if (q === 0) st.aud = i;
+      else if (q === 1) { const s = i === A.length ? 'unsure' : A[i].slug; if (s !== st.area) st.topic = -1; st.area = s; }
+      else if (q === 2) st.topic = i; else if (q === 3) st.deadline = i; else if (q === 4) st.format = i; else st.language = i;
+      track('question_answered', { question_number: q + 1, answer: opts(q)[i] });
+      if (st.pos + 1 >= order().length) st.phase = 'details'; else st.pos += 1;
+      render();
+    } else if (el.dataset.back === 'q') { st.pos = Math.max(0, st.pos - 1); render(); }
+    else if (el.dataset.back === 'details') { st.phase = 'q'; st.pos = order().length - 1; render(); }
+    else if (el.dataset.back === 'times') { st.phase = 'details'; render(); }
+    else if (el.dataset.slot !== undefined) { st.slot = el.dataset.slot; st.phase = 'done'; track('booking_completed', { area: st.area }); render(); }
+    else if (el.dataset.done !== undefined) { st.phase = 'done'; track('booking_completed', { area: st.area }); render(); }
+  });
+  app.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target as HTMLFormElement; const d = new FormData(f); const err = f.querySelector('#err')!;
+    st.name = String(d.get('name') || '').trim(); st.email = String(d.get('email') || '').trim(); st.phone = String(d.get('phone') || '');
+    st.company = String(d.get('company') || ''); st.country = String(d.get('country') || ''); st.msg = String(d.get('msg') || '');
+    if (!st.name) { err.textContent = S.errName; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(st.email)) { err.textContent = S.errEmail; return; }
+    if (!(f.querySelector('#f-consent') as HTMLInputElement).checked) { err.textContent = S.errConsent; return; }
+    track('details_submitted', { area: st.area });
+    sendLead(); st.phase = 'times'; render();
+  });
+
+  track('booking_start', { preset_area: preset?.slug ?? 'none' });
+  render();
+</script>
+<style is:global>
+  .book .panel { max-width: 720px; margin: 0 auto; background: var(--white); padding: clamp(24px, 5vw, 48px); display: flex; flex-direction: column; gap: 18px; min-height: 520px; }
+  .book .aside { max-width: 720px; margin: 16px auto 0; }
+  .book .panel > .btn { align-self: flex-start; }
+  .book .q { font-size: clamp(28px, 4vw, 38px); outline: none; }
+  .prog .bars { display: grid; gap: 6px; margin-bottom: 8px; }
+  .prog .bars span { height: 4px; background: #D6CFBF; }
+  .prog .bars span.on { background: var(--navy); }
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt { text-align: left; min-height: 56px; padding: 14px 18px; background: var(--white); border: 1px solid var(--line); font: 16px/1.4 var(--sans); color: var(--navy); cursor: pointer; border-radius: 0; }
+  .opt:hover { border-color: var(--navy); }
+  .opt.sel { border-color: var(--navy); box-shadow: inset 3px 0 0 var(--gold); }
+  .back, .linkbtn { align-self: flex-start; background: none; border: 0; padding: 8px 0; font: 15px var(--sans); color: var(--slate); cursor: pointer; text-decoration: underline; }
+  .res { background: var(--paper); border-top: 2px solid var(--navy); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .form { display: flex; flex-direction: column; gap: 8px; }
+  .form label { font-size: 15px; font-weight: 500; margin-top: 8px; }
+  .form input:not([type=checkbox]), .form textarea { min-height: 48px; padding: 10px 12px; border: 1px solid #BFB8AA; font: 16px var(--sans); color: var(--navy); border-radius: 0; }
+  .form .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; }
+  .form .check input { margin-top: 5px; width: 18px; height: 18px; flex: none; }
+  .form .btn { margin-top: 12px; align-self: flex-start; }
+  .err { color: #8A2B2B; font-size: 15px; min-height: 1em; }
+  .day { display: flex; flex-direction: column; gap: 8px; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .slot { min-height: 44px; min-width: 88px; background: var(--white); border: 1px solid var(--navy); font: 500 15px var(--sans); color: var(--navy); cursor: pointer; }
+  .slot:hover { background: var(--navy); color: var(--ivory); }
+  .bk { width: 100%; height: 720px; border: 1px solid var(--line); }
+  .list { padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .list li::before { content: '—'; color: var(--gold); margin-right: 10px; }
+</style>

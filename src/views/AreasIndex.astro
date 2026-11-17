@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas } from '../data/areas';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = ui[lang];
+const pt = lang === 'pt';
+const h = (p: string) => localePath(lang, p);
+---
+<Base lang={lang} path="/areas/" title={pt ? 'Áreas de prática' : 'Practice areas'}
+  description={pt ? 'Imigração e Nacionalidade, Contratos, Direito Laboral, Direito Comercial e das Empresas, Imobiliário, RGPD e Compliance.' : 'Immigration & Nationality, Contracts, Employment Law, Corporate & Commercial Law, Real Estate, GDPR & Compliance.'}>
+  <section class="section">
+    <div class="wrap stack" style="gap:48px">
+      <div class="stack">
+        <p class="eyebrow">{t.areasEyebrow}</p>
+        <h1>{pt ? 'Áreas de prática' : 'Practice areas'}</h1>
+        <p class="lead">{pt ? 'Cada área tem uma advogada responsável. Ao marcar a reunião, escolhe a área e a marcação vai diretamente para quem a acompanha.' : 'Each area has a lawyer responsible for it. When you book, you choose the area and the meeting goes directly to the lawyer who handles it.'}</p>
+      </div>
+      <div class="grid">
+        {areas.map((a) => (
+          <article class="card">
+            <h2 style="font-size:24px">{a.title[lang]}</h2>
+            <p class="muted">{a.short[lang]}</p>
+            <ul class="dash small">{a.matters[lang].slice(0, 3).map((m) => <li>{m}</li>)}</ul>
+            <a class="more" href={h(`/areas/${a.slug}/`)} aria-label={`${t.seeArea}: ${a.title[lang]}`}>{t.seeArea} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <BookBlock lang={lang} />
+</Base>

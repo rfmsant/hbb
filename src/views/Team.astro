@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas } from '../data/areas';
+import { ph } from '../data/ph';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const pt = lang === 'pt';
+const h = (p: string) => localePath(lang, p);
+// Two lawyers, not named on the site for now. Each covers the areas of her calendar plus the shared one.
+const profiles = [
+  areas.filter((a) => a.cal === 'cal1' || a.cal === 'cal3'),
+  areas.filter((a) => a.cal === 'cal2' || a.cal === 'cal3'),
+];
+---
+<Base lang={lang} path="/team/" title={pt ? 'A equipa' : 'The team'}
+  description={pt ? 'Sociedade multidisciplinar com advogadas inscritas na Ordem dos Advogados, em Lisboa.' : 'A multidisciplinary firm in Lisbon whose lawyers are registered with the Portuguese Bar Association.'}>
+  <section class="section">
+    <div class="wrap stack" style="gap:48px">
+      <div class="stack">
+        <p class="eyebrow">{pt ? 'A equipa' : 'The team'}</p>
+        <h1>{pt ? 'Quem acompanha cada área.' : 'Who handles each area.'}</h1>
+        <p class="lead">{pt ? 'A HBB é uma sociedade multidisciplinar em Lisboa. As advogadas estão inscritas na Ordem dos Advogados e trabalham em português e inglês. Cada reunião é atribuída à advogada responsável pela área do assunto.' : 'HBB is a multidisciplinary firm in Lisbon. Its lawyers are registered with the Portuguese Bar Association (Ordem dos Advogados) and work in Portuguese and English. Each meeting is assigned to the lawyer responsible for the area of the matter.'}</p>
+      </div>
+      <div class="grid grid--2">
+        {profiles.map((list) => (
+          <article class="profile">
+            <p class="eyebrow">{pt ? 'Advogada' : 'Lawyer'}</p>
+            <ul class="dash">{list.map((a) => <li><a href={h(`/areas/${a.slug}/`)}>{a.title[lang]}</a></li>)}</ul>
+            <p class="small muted" set:html={ph(pt ? 'Línguas: [Línguas|português e inglês]' : 'Languages: [Languages|Portuguese and English]')} />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <BookBlock lang={lang} />
+</Base>

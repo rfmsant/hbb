@@ -1,27 +1,47 @@
 ---
+import Logo from './Logo.astro';
 import { site } from '../data/site';
+import { areas } from '../data/areas';
 import { ph } from '../data/ph';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = ui[lang];
+const h = (p: string) => localePath(lang, p);
+const oa = lang === 'pt' ? 'Registo na Ordem dos Advogados n.º' : 'Ordem dos Advogados registration no.';
 ---
 <footer class="ftr section--navy">
   <div class="wrap ftr__in">
     <div class="stack">
-      <img src="/logo-negative.svg" alt="HBB Harbor Beyond Borders" width="200" height="55">
-      <p class="small" style="color:#D9D4C8">Immigration, tax &amp; property lawyers in Lisbon.</p>
+      <Logo href={h('/')} label="HBB Harbor Beyond Borders" negative />
+      <p class="small ftr__muted">{t.tagline}</p>
     </div>
-    <div class="stack small">
-      <p set:html={ph(`${site.legalName} · Ordem dos Advogados nº ${site.oaNumber} · NIPC ${site.nipc}`)} />
+    <nav class="stack small" aria-label={t.areasEyebrow}>
+      <p class="ftr__head">{t.areasEyebrow}</p>
+      {areas.map((a) => <a href={h(`/areas/${a.slug}/`)}>{a.title[lang]}</a>)}
+    </nav>
+    <div class="stack small ftr__id">
+      <p set:html={ph(site.legalName)} />
+      <p set:html={ph(`${oa} ${site.oaNumber} · NIPC ${site.nipc}`)} />
       <p set:html={ph(`${site.address} · ${site.phone} · ${site.email}`)} />
       <p class="ftr__links">
-        <a href="/privacy/">Privacy</a><a href="/cookies/">Cookies</a><a href="/terms/">Terms</a>
-        <a href="https://www.livroreclamacoes.pt/" rel="noopener">Livro de Reclamações</a>
-        <button type="button" class="linklike" data-open-consent>Cookie settings</button>
+        {t.footerLinks.map(([p, l]) => <a href={h(p)}>{l}</a>)}
+        <a href="https://www.livroreclamacoes.pt/" rel="noopener">{t.complaints}</a>
+        <button type="button" class="linklike" data-open-consent>{t.cookieSettings}</button>
       </p>
     </div>
   </div>
 </footer>
 <style>
   .ftr { padding-block: 56px calc(96px + env(safe-area-inset-bottom, 0px)); }
-  .ftr__in { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
-  .ftr__links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .ftr__in { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 40px; }
+  .ftr__in nav { gap: 8px; }
+  .ftr__in nav a { text-decoration: none; }
+  .ftr__head { font-size: 13px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-light); }
+  .ftr__muted, .ftr__id { color: #D9D4C8; }
+  .ftr__id { gap: 10px; }
+  .ftr__links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 8px; }
   .linklike { background: none; border: 0; padding: 0; font: inherit; color: var(--ivory); text-decoration: underline; cursor: pointer; }
+  @media (max-width: 860px) { .ftr__in { grid-template-columns: 1fr; } }
 </style>

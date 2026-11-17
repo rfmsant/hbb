@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { ph } from '../data/ph';
+import type { Locale } from '../i18n/config';
+interface Props { lang: Locale; kind: 'privacy' | 'cookies' | 'terms' }
+const { lang, kind } = Astro.props;
+const pt = lang === 'pt';
+const C = {
+  privacy: { path: '/privacy/', en: ['Privacy policy', 'How HBB collects, uses and protects personal data, including the answers you give when booking a meeting.'], pt: ['Política de privacidade', 'Como a HBB recolhe, usa e protege dados pessoais, incluindo as respostas dadas ao marcar uma reunião.'] },
+  cookies: { path: '/cookies/', en: ['Cookie policy', 'Which cookies this website uses and how to change your choice.'], pt: ['Política de cookies', 'Que cookies este site usa e como alterar a sua escolha.'] },
+  terms: { path: '/terms/', en: ['Legal notice', 'Who is responsible for this website and the terms that apply to its use.'], pt: ['Aviso legal', 'Quem é responsável por este site e os termos que se aplicam à sua utilização.'] },
+}[kind];
+const [title, intro] = C[lang];
+const pending = pt ? '[Texto completo a redigir e aprovar pelas sócias antes do lançamento.|Texto de exemplo para a pré-visualização. A versão final será redigida e aprovada pelas sócias antes do lançamento.]' : '[Full text to be written and approved by the partners before launch.|Sample text for the preview. The final text will be written and approved by the partners before launch.]';
+---
+<Base lang={lang} path={C.path} title={title} description={intro} noindex>
+  <section class="section"><div class="wrap prose">
+    <h1>{title}</h1>
+    <p>{intro}</p>
+    {kind === 'terms' && (
+      <>
+        <h2>{pt ? 'Identificação' : 'Identification'}</h2>
+        <p set:html={ph(site.legalName)} />
+        <p set:html={ph(`${pt ? 'Sociedade de advogados registada na Ordem dos Advogados sob o n.º' : 'Law firm registered with the Portuguese Bar Association (Ordem dos Advogados) under no.'} ${site.oaNumber} · NIPC ${site.nipc}`)} />
+        <p set:html={ph(`${site.address} · ${site.phone} · ${site.email}`)} />
+        <p>{pt ? 'A informação deste site é geral e não substitui aconselhamento jurídico para um caso concreto.' : 'The information on this website is general and does not replace legal advice for a specific case.'}</p>
+      </>
+    )}
+    <p><span set:html={ph(pending)} /></p>
+  </div></section>
+</Base>

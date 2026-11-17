@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas, paths } from '../data/areas';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+import { getCollection } from 'astro:content';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = ui[lang];
+const pt = lang === 'pt';
+const h = (p: string) => localePath(lang, p);
+const posts = (await getCollection('insights', (p) => !p.data.draft && p.data.lang === lang)).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
+const doors = [paths.companies, paths.people];
+---
+<Base
+  lang={lang} path="/"
+  title={pt ? 'HBB — Advogados em Lisboa para empresas e para quem se muda para Portugal' : 'HBB — Lawyers in Lisbon for companies and people moving to Portugal'}
+  description={pt ? 'Imigração e nacionalidade, contratos, direito laboral, direito comercial, imobiliário e RGPD. Em português e inglês.' : 'Immigration and nationality, contracts, employment, corporate law, real estate and GDPR. In Portuguese and English.'}>
+  <section class="hero">
+    <div class="wrap stack">
+      <p class="eyebrow">{t.tagline}</p>
+      <h1>{pt ? 'Advogados para empresas e para quem se muda para Portugal.' : 'Lawyers for companies and for people moving to Portugal.'}</h1>
+      <p class="lead">{pt ? 'Imigração e nacionalidade, contratos, direito laboral, direito comercial, imobiliário e RGPD. Em português e inglês, a partir de Lisboa.' : 'Immigration and nationality, contracts, employment law, corporate law, real estate and GDPR. In Portuguese and English, from Lisbon.'}</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={h('/book/')} data-cta="hero">{t.cta}</a>
+        <a class="btn btn--ghost" href={h('/areas/')}>{pt ? 'Ver as áreas' : 'See the practice areas'}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">{pt ? 'Quem acompanhamos' : 'Who we advise'}</p><h2>{pt ? 'Empresas e quem se muda para Portugal.' : 'Companies, and people moving to Portugal.'}</h2></div>
+      <div class="doors">
+        {doors.map((d) => (
+          <a class="door" href={h(d.enPath)}>
+            <p class="eyebrow">{d.eyebrow[lang]}</p>
+            <h3>{d.title[lang]}</h3>
+            <ul class="dash">{d.situations.slice(0, 4).map((s) => <li>{s[lang]}</li>)}</ul>
+            <span class="go">{pt ? 'Ver mais' : 'See more'} →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">{t.areasEyebrow}</p><h2>{pt ? 'Seis áreas de prática.' : 'Six practice areas.'}</h2></div>
+      <div class="grid">
+        {areas.map((a) => (
+          <article class="card">
+            <h3>{a.title[lang]}</h3>
+            <p class="muted">{a.short[lang]}</p>
+            <a class="more" href={h(`/areas/${a.slug}/`)} aria-label={`${t.seeArea}: ${a.title[lang]}`}>{t.seeArea} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="section section--paper">
+      <div class="wrap stack" style="gap:40px">
+        <div class="stack"><p class="eyebrow">{pt ? 'Artigos' : 'Insights'}</p><h2>{pt ? 'Artigos da equipa.' : 'Articles by the team.'}</h2></div>
+        <div class="grid">
+          {posts.map((p) => <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none"><p class="tag">{p.data.category}</p><h3>{p.data.title}</h3><p class="small muted">{p.data.description}</p></a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <BookBlock lang={lang} />
+</Base>

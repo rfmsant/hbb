@@ -1,0 +1,8 @@
+---
+import AreaPage from '../../../views/AreaPage.astro';
+import { areas } from '../../../data/areas';
+import { ptAreaSlugs } from '../../../i18n/config';
+export function getStaticPaths() { return areas.map((area) => ({ params: { slug: ptAreaSlugs[area.slug] }, props: { area } })); }
+const { area } = Astro.props;
+---
+<AreaPage lang="pt" area={area} />

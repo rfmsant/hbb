@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { locales, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const pt = lang === 'pt';
+const posts = (await getCollection('insights', (p) => !p.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+---
+<Base lang={lang} path="/insights/" title={pt ? 'Artigos' : 'Insights'}
+  description={pt ? 'Artigos da equipa da HBB sobre imigração, contratos, direito laboral, direito comercial, imobiliário e RGPD.' : 'Articles by the HBB team on immigration, contracts, employment, corporate law, real estate and GDPR.'}>
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">{pt ? 'Artigos' : 'Insights'}</p><h1>{pt ? 'Artigos da equipa' : 'Articles by the team'}</h1></div>
+      {posts.length === 0 ? <p class="muted">{pt ? 'Os primeiros artigos estão a ser preparados.' : 'The first articles are being prepared.'}</p> : (
+        <div class="grid">
+          {posts.map((p) => (
+            <a class="card" href={`/insights/${p.slug}/`} style="text-decoration:none" hreflang={locales[p.data.lang].html}>
+              <p class="tag">{p.data.category}{p.data.lang !== lang && ` · ${pt ? 'em inglês' : 'in Portuguese'}`}</p>
+              <h3>{p.data.title}</h3>
+              <p class="small muted">{p.data.description}</p>
+              <p class="small muted">{p.data.date.toLocaleDateString(locales[lang].date, { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

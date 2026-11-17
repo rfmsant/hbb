@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas, areaBySlug, paths } from '../data/areas';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale; which: keyof typeof paths }
+const { lang, which } = Astro.props;
+const p = paths[which];
+const t = ui[lang];
+const pt = lang === 'pt';
+const h = (x: string) => localePath(lang, x);
+const involved = areas.filter((a) => p.situations.some((s) => s.area === a.slug));
+---
+<Base lang={lang} path={p.enPath} title={p.eyebrow[lang]} description={p.lead[lang]}>
+  <section class="hero">
+    <div class="wrap stack">
+      <p class="eyebrow">{p.eyebrow[lang]}</p>
+      <h1>{p.title[lang]}</h1>
+      <p class="lead">{p.lead[lang]}</p>
+      <div class="btn-row"><a class="btn btn--primary" href={h('/book/')} data-cta={`path-${which}`}>{t.cta}</a></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap stack" style="gap:32px">
+      <div class="stack"><p class="eyebrow">{pt ? 'Situações frequentes' : 'Common situations'}</p><h2>{pt ? 'Por onde começar' : 'Where to start'}</h2></div>
+      <div class="sit">
+        {p.situations.map((s) => <a href={h(`/areas/${s.area}/`)}><span>{s[lang]}</span><span>{areaBySlug(s.area).title[lang]} →</span></a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack" style="gap:40px">
+      <div class="stack"><p class="eyebrow">{t.areasEyebrow}</p><h2>{pt ? 'As áreas envolvidas' : 'The areas involved'}</h2></div>
+      <div class="grid">
+        {involved.map((a) => <article class="card"><h3>{a.title[lang]}</h3><p class="muted">{(which === 'companies' ? a.companies : a.people)?.[lang] ?? a.short[lang]}</p><a class="more" href={h(`/areas/${a.slug}/`)} aria-label={`${t.seeArea}: ${a.title[lang]}`}>{t.seeArea} →</a></article>)}
+      </div>
+    </div>
+  </section>
+
+  <BookBlock lang={lang} />
+</Base>

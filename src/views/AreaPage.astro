@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import BookBlock from '../components/BookBlock.astro';
+import { areas, type Area } from '../data/areas';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+import { breadcrumbs } from '../lib/schema';
+interface Props { lang: Locale; area: Area }
+const { lang, area } = Astro.props;
+const t = ui[lang];
+const pt = lang === 'pt';
+const h = (p: string) => localePath(lang, p);
+const enPath = `/areas/${area.slug}/`;
+const base = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), Astro.site);
+const schema = [
+  { '@type': 'Service', name: area.title[lang], description: area.lead[lang], serviceType: area.title[lang], provider: { '@id': new URL('#firm', base).href }, areaServed: 'PT', inLanguage: lang === 'pt' ? 'pt-PT' : 'en' },
+  breadcrumbs(base, [[t.home, h('/')], [t.areasEyebrow, h('/areas/')], [area.title[lang], h(enPath)]]),
+];
+const others = areas.filter((a) => a.slug !== area.slug);
+---
+<Base lang={lang} path={enPath} title={area.title[lang]} description={area.short[lang]} schema={schema}>
+  <section class="hero" style="padding-bottom:48px">
+    <div class="wrap stack">
+      <p class="crumbs"><a href={h('/areas/')}>{t.areasEyebrow}</a> / {area.title[lang]}</p>
+      <h1>{area.title[lang]}</h1>
+      <p class="lead">{area.lead[lang]}</p>
+      <div class="btn-row"><a class="btn btn--primary" href={`${h('/book/')}?area=${area.slug}`} data-cta={`area-${area.slug}`}>{t.cta}</a></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap cols">
+      <div class="stack">
+        <p class="eyebrow">{pt ? 'Para quem' : 'Who it is for'}</p>
+        <div class="who">
+          {area.companies && <p><b>{pt ? 'Empresas' : 'Companies'}</b>{area.companies[lang]}</p>}
+          {area.people && <p><b>{pt ? 'Particulares' : 'Individuals'}</b>{area.people[lang]}</p>}
+        </div>
+      </div>
+      <div class="stack">
+        <p class="eyebrow">{pt ? 'Assuntos que acompanhamos' : 'Matters we handle'}</p>
+        <ul class="dash">{area.matters[lang].map((m) => <li>{m}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap cols">
+      <div class="stack">
+        <p class="eyebrow">{pt ? 'Para a primeira reunião' : 'For the first meeting'}</p>
+        <h2 style="font-size:30px">{pt ? 'O que convém ter à mão' : 'What to have at hand'}</h2>
+        <ul class="dash">{area.prepare[lang].map((m) => <li>{m}</li>)}</ul>
+      </div>
+      <div class="stack">
+        <p class="eyebrow">{pt ? 'Outras áreas' : 'Other areas'}</p>
+        <ul class="dash">{others.map((a) => <li><a href={h(`/areas/${a.slug}/`)}>{a.title[lang]}</a></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <BookBlock lang={lang} area={area.slug} />
+</Base>

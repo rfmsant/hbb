@@ -12,7 +12,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const email = String(data.email || '');
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || !data.name) return new Response('Missing name or email', { status: 422 });
   // Keep only the fields we expect.
-  const keep = ['answers', 'route', 'priority', 'lawyer', 'callType', 'callTitle', 'name', 'email', 'phone', 'country', 'marketing', 'page'];
+  const keep = ['lang', 'audience', 'area', 'areaSlug', 'topic', 'deadline', 'format', 'language', 'cal', 'priority', 'callTitle', 'name', 'email', 'phone', 'company', 'country', 'message', 'marketing', 'page'];
   const lead = Object.fromEntries(keep.map((k) => [k, data[k]]));
   if (!env.ZOHO_FLOW_WEBHOOK) return Response.json({ ok: true, note: 'Webhook not configured yet' });
   const r = await fetch(env.ZOHO_FLOW_WEBHOOK, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...lead, receivedAt: new Date().toISOString() }) });

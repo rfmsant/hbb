@@ -1,15 +1,35 @@
-// Languages. English is the default (no prefix). Others live under /pt/, /pt-br/, /fr/, /es/.
-// Add a code to `live` only when that language's pages are translated and reviewed by a native speaker.
+// Languages. English has no prefix; Portuguese lives under /pt/ with Portuguese slugs.
 export const locales = {
-  en: { label: 'English', html: 'en', prefix: '' },
-  pt: { label: 'Português', html: 'pt-PT', prefix: 'pt' },
-  'pt-br': { label: 'Português (Brasil)', html: 'pt-BR', prefix: 'pt-br' },
-  fr: { label: 'Français', html: 'fr', prefix: 'fr' },
-  es: { label: 'Español', html: 'es', prefix: 'es' },
+  en: { label: 'English', short: 'EN', html: 'en', prefix: '', date: 'en-GB' },
+  pt: { label: 'Português', short: 'PT', html: 'pt-PT', prefix: 'pt', date: 'pt-PT' },
 } as const;
 export type Locale = keyof typeof locales;
-export const live: Locale[] = ['en'];
-export const planned: Locale[] = ['en', 'pt', 'pt-br', 'fr', 'es'];
+export const live: Locale[] = ['en', 'pt'];
+export const planned: Locale[] = live;
 
-/** Path of the same page in another language. `path` is the English path, e.g. "/services/d7-visa/". */
-export const localePath = (l: Locale, path: string) => (locales[l].prefix ? `/${locales[l].prefix}${path}` : path);
+// English path → Portuguese path (without /pt). Anything not listed keeps its English slug.
+const ptPaths: Record<string, string> = {
+  '/for-companies/': '/empresas/',
+  '/moving-to-portugal/': '/mudar-para-portugal/',
+  '/team/': '/equipa/',
+  '/book/': '/marcar/',
+  '/insights/': '/artigos/',
+  '/privacy/': '/privacidade/',
+  '/terms/': '/aviso-legal/',
+};
+export const ptAreaSlugs: Record<string, string> = {
+  immigration: 'imigracao-nacionalidade',
+  contracts: 'contratos',
+  employment: 'direito-laboral',
+  corporate: 'direito-comercial',
+  'real-estate': 'imobiliario',
+  'data-protection': 'rgpd-compliance',
+};
+
+/** URL of a page in a language. `enPath` is always the English path, e.g. "/areas/contracts/". */
+export function localePath(l: Locale, enPath: string) {
+  if (l === 'en') return enPath;
+  const area = enPath.match(/^\/areas\/([^/]+)\/$/);
+  const p = area ? `/areas/${ptAreaSlugs[area[1]] ?? area[1]}/` : ptPaths[enPath] ?? enPath;
+  return `/pt${p}`;
+}

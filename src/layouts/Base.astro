@@ -10,11 +10,14 @@ import Consent from '../components/Consent.astro';
 import { SAMPLE } from '../data/ph';
 import { orgSchema, graph } from '../lib/schema';
 import { locales, live, localePath, type Locale } from '../i18n/config';
+import { ui } from '../i18n/ui';
+// `path` is the ENGLISH path of this page (e.g. "/areas/contracts/"), used to link both language versions.
 interface Props { title: string; description: string; noindex?: boolean; schema?: unknown[]; lang?: Locale; path?: string }
 const { title, description, schema = [], lang = 'en' } = Astro.props;
 const baseURL = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), Astro.site);
-const enPath = Astro.props.path ?? Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') ?? '/';
-const alt = (l: Locale) => new URL(localePath(l, enPath).replace(/^\//, ''), baseURL).href;
+const enPath = Astro.props.path ?? (Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/');
+const abs = (l: Locale) => new URL(localePath(l, enPath).replace(/^\//, ''), baseURL).href;
+const other: Locale = lang === 'pt' ? 'en' : 'pt';
 const website = { '@type': 'WebSite', '@id': new URL('#website', baseURL).href, name: 'HBB — Harbor Beyond Borders', url: baseURL.href, inLanguage: live.map((l) => locales[l].html), publisher: { '@id': new URL('#firm', baseURL).href } };
 const noindex = Astro.props.noindex || import.meta.env.PUBLIC_NOINDEX === '1';
 const full = title.includes('HBB') ? title : `${title} · HBB Harbor Beyond Borders`;
@@ -27,26 +30,27 @@ const full = title.includes('HBB') ? title : `${title} · HBB Harbor Beyond Bord
   <title>{full}</title>
   <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex">}
-  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)}>
+  <link rel="canonical" href={abs(lang)}>
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon-180.png">
   <meta property="og:title" content={full}>
   <meta property="og:description" content={description}>
   <meta property="og:type" content="website">
+  <meta property="og:locale" content={lang === 'pt' ? 'pt_PT' : 'en_GB'}>
   <meta name="theme-color" content="#12233F">
-  {live.map((l) => <link rel="alternate" hreflang={locales[l].html} href={alt(l)}>)}
-  <link rel="alternate" hreflang="x-default" href={alt('en')}>
+  {live.map((l) => <link rel="alternate" hreflang={locales[l].html} href={abs(l)}>)}
+  <link rel="alternate" hreflang="x-default" href={abs('en')}>
   <link rel="alternate" type="text/plain" title="llms.txt" href={new URL('llms.txt', baseURL).href}>
   <script type="application/ld+json" set:html={graph(orgSchema(baseURL), website, ...schema)} />
 </head>
 <body>
-  <a href="#main" class="skip">Skip to content</a>
-  {SAMPLE && <div class="preview-bar">Preview · sample photos and figures, not final</div>}
-  <Header />
+  <a href="#main" class="skip">{ui[lang].skip}</a>
+  {SAMPLE && <div class="preview-bar">{ui[lang].preview}</div>}
+  <Header lang={lang} alt={localePath(other, enPath)} />
   <main id="main"><slot /></main>
-  <Footer />
-  <Consent />
+  <Footer lang={lang} />
+  <Consent lang={lang} />
   <style is:global>
     .preview-bar { background: var(--navy); color: var(--gold-light); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; text-align: center; padding: 6px 16px; }
     .skip { position: absolute; left: -9999px; } .skip:focus { left: 12px; top: 12px; z-index: 50; background: var(--white); padding: 8px 12px; }

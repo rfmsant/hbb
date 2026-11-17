@@ -1,23 +1,19 @@
-// Everything the team still has to confirm lives here or in services.ts / team.ts.
+// Everything the team still has to confirm lives here. [label|sample]: shown highlighted until confirmed.
 export const site = {
   name: 'HBB — Harbor Beyond Borders',
-  legalName: '[Legal name of the firm|Harbor Beyond Borders — Sociedade de Advogados, SP, RL]',
-  oaNumber: '[—|00/26]',
+  // Firm name rules: Lei 53/2015, art. 20 ("Advogados" and "SP" before the legal form).
+  legalName: '[Denominação legal|HBB – Harbor Beyond Borders, Advogados, SP, Lda]',
+  oaNumber: '[—|00/27]',
   nipc: '[—|500 000 000]',
-  address: '[Address|Avenida da Liberdade 110], Lisbon',
+  address: '[Morada|Avenida da Liberdade 110], Lisboa',
   phone: '+351 [—|210 000 000]',
-  email: 'contact@[domain|harborbeyondborders.com]',
-  strategySessionPrice: '€[X|450]',
-  // Google Analytics 4. Leave as is until the property exists; nothing loads while it is a placeholder.
+  email: 'geral@[domínio|harborbeyondborders.com]',
+  // Google Analytics 4. Nothing loads while it is a placeholder.
   ga4Id: 'G-XXXXXXXXXX',
   // Microsoft Clarity project id (optional). Loads only after analytics consent.
   clarityId: '',
 };
 
-export const nav = [
-  { href: '/#who-we-advise', label: 'Who we advise' },
-  { href: '/services/', label: 'Services' },
-  { href: '/team/', label: 'Our lawyers' },
-  { href: '/fees/', label: 'Fees' },
-  { href: '/insights/', label: 'Insights' },
-];
+// Microsoft Bookings pages, one per calendar. Fill in when the Bookings pages exist.
+// cal1: immigration & nationality · cal2: contracts, employment, real estate, GDPR · cal3: shared (corporate, or "not sure")
+export const calendars: Record<'cal1' | 'cal2' | 'cal3', string> = { cal1: '', cal2: '', cal3: '' };

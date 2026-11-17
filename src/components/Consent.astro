@@ -1,12 +1,17 @@
 ---
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../i18n/config';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = ui[lang];
 ---
-<div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Cookie choices" hidden>
-  <p>We use analytics cookies to understand which pages help people and where the booking form can be simpler. Nothing is shared for advertising without your consent.</p>
+<div class="consent" id="consent" role="dialog" aria-live="polite" aria-label={t.cookieSettings} hidden>
+  <p>{t.consentText}</p>
   <div class="btn-row">
-    <button class="btn btn--primary" data-consent="all" type="button">Accept analytics</button>
-    <button class="btn btn--ghost" data-consent="none" type="button">Only necessary</button>
+    <button class="btn btn--primary" data-consent="all" type="button">{t.consentAll}</button>
+    <button class="btn btn--ghost" data-consent="none" type="button">{t.consentNone}</button>
   </div>
-  <a href="/cookies/" class="small">Cookie policy</a>
+  <a href={localePath(lang, '/cookies/')} class="small">{t.consentPolicy}</a>
 </div>
 <style>
   .consent { position: fixed; z-index: 40; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: 560px; margin-left: auto; background: var(--white); border: 1px solid var(--navy); padding: 20px; display: flex; flex-direction: column; gap: 14px; font-size: 15px; box-shadow: 0 10px 30px rgba(18,35,63,.18); }

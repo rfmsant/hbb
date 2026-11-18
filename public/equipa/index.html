@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HBB Revisão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Libre+Caslon+Text:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#12233F;--gold:#8C6A2F;--goldl:#C2A061;--ivory:#F4EFE6;--paper:#F7F4EE;--slate:#4A5260;--white:#FFFFFF;--line:#E4DED2}
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+body{font-family:Jost,Arial,sans-serif;background:var(--paper);color:var(--blue);font-size:16px;line-height:26px;-webkit-tap-highlight-color:transparent}
+.serif{font-family:"Libre Caslon Text",Georgia,serif}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--white);border-bottom:1px solid var(--gold);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mono{width:54px;height:54px;background:var(--blue);color:var(--ivory);font:700 15px/1 "Libre Caslon Text",Georgia,serif;display:flex;align-items:center;justify-content:center;letter-spacing:.5px}
+.nm{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.nm b{font:700 22px/1 "Libre Caslon Text",Georgia,serif;letter-spacing:2px;color:var(--blue)}
+.nm i{font:500 7.5px/1 Jost,Arial,sans-serif;font-style:normal;color:var(--gold);white-space:nowrap}
+header .ctx{margin-left:auto;text-align:right}
+.lbl{font:500 12px/16px Jost,Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.navb{background:none;border:1px solid var(--blue);color:var(--blue);font:500 13px Jost,Arial;padding:6px 10px;cursor:pointer;margin-top:4px}
+main{flex:1;padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+h1{font:400 28px/34px "Libre Caslon Text",Georgia,serif}
+h2{font:400 22px/30px "Libre Caslon Text",Georgia,serif}
+.sec{color:var(--slate);font-size:14px;line-height:22px}
+.rule{height:1px;background:var(--gold);border:0}
+.tile{background:var(--white);border:1px solid var(--line);padding:18px;display:flex;align-items:center;gap:16px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.tile:hover:not([disabled]){border-color:var(--blue)}
+.tile[disabled]{opacity:.75}
+.tile .lbl{display:block}
+.num{width:44px;height:44px;flex:none;border:1px solid var(--blue);display:flex;align-items:center;justify-content:center;font:400 20px "Libre Caslon Text",Georgia,serif}
+.num.f{background:var(--blue);color:var(--ivory)}
+.tile b{display:block;font-weight:500}
+.btn{border:1px solid var(--blue);padding:13px 16px;font:500 15px Jost,Arial,sans-serif;cursor:pointer;width:100%;background:var(--white);color:var(--blue);text-align:center;text-decoration:none;display:block}
+.btn.p{background:var(--blue);color:var(--ivory)}
+.btn.g{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.btn.q{border-color:var(--slate);color:var(--slate)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.bar{height:2px;background:var(--line)}.bar i{display:block;height:100%;background:var(--gold);transition:width .25s}
+/* deck */
+.deck{position:relative;height:420px}
+.sc{position:absolute;inset:0;background:var(--white);border:1px solid var(--line);border-top:2px solid var(--blue);padding:24px;display:flex;flex-direction:column;gap:14px;touch-action:none;user-select:none;cursor:grab;transition:transform .25s ease}
+.sc.drag{transition:none;cursor:grabbing}
+.sc.back{transform:translateY(10px) scale(.96);pointer-events:none;opacity:.6}
+.sc h3{font:400 21px/29px "Libre Caslon Text",Georgia,serif}
+.sc .q{border-left:1px solid var(--gold);padding:2px 0 2px 12px;font-family:"Libre Caslon Text",Georgia,serif;font-size:15px;line-height:23px}
+.flagt{align-self:flex-start;border:1px solid var(--gold);color:var(--gold);font:500 12px Jost;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px}
+.stamp{position:absolute;top:24px;font:500 14px Jost;letter-spacing:.2em;padding:4px 10px;border:1px solid;opacity:0;background:var(--white)}
+.s-yes{right:24px;color:var(--blue);border-color:var(--blue)}.s-no{left:24px;color:var(--slate);border-color:var(--slate)}
+.acts{display:flex;justify-content:center;gap:14px}
+.rb{width:58px;height:58px;border:1px solid var(--blue);background:var(--white);color:var(--blue);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rb.yes{background:var(--blue);color:var(--ivory)}.rb.no{border-color:var(--slate);color:var(--slate)}.rb.may{border-color:var(--gold);color:var(--gold)}
+.rb.sm{width:46px;height:46px;font-size:18px;align-self:center;border-color:var(--line);color:var(--slate)}
+.hint{text-align:center;font-size:13px;color:var(--slate)}
+/* article (blog view) */
+.page{background:var(--white);border:1px solid var(--line)}
+.cover{height:190px;background:var(--blue);display:flex;align-items:flex-end;padding:14px 18px;color:var(--ivory)}
+.cover small{font:400 13px/20px Jost;opacity:.85}
+.pg{padding:26px 22px 30px}
+.pg .meta{font-size:13px;color:var(--slate);margin:10px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--gold)}
+.pg h1{font-size:27px;line-height:34px}
+.pg h2{font-size:20px;line-height:28px;margin:26px 0 8px}
+.pg p{margin:0 0 14px;color:var(--blue)}
+.pg p.lead{font-family:"Libre Caslon Text",Georgia,serif;font-size:17px;line-height:28px}
+.pg .src{font-size:14px;color:var(--slate)}.pg .src a{color:var(--blue)}
+.fx{border-bottom:1px solid var(--gold);cursor:pointer}
+.fx.on{background-color:var(--ivory)}
+.fx sup{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;border:1px solid var(--gold);color:var(--gold);font:500 10px Jost;margin-left:3px;vertical-align:3px}
+.fx.ok sup{background:var(--blue);border-color:var(--blue);color:var(--ivory)}
+.fx.bad sup{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.vf{background:var(--ivory);padding:0 3px;font-weight:500}
+.cta{border:1px solid var(--blue);padding:12px;text-align:center;font-weight:500;margin-top:20px}
+.edit{outline:1px dashed var(--gold);outline-offset:4px}
+/* fact */
+.fact{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--blue);padding:22px;display:flex;flex-direction:column;gap:14px}
+.fact .t{font:400 18px/27px "Libre Caslon Text",Georgia,serif}
+.ctxp{font-size:14px;line-height:22px;color:var(--slate);border-left:1px solid var(--gold);padding-left:12px}
+.fact a{color:var(--blue)}
+.warn{border:1px solid var(--gold);padding:10px 12px;font-size:14px;line-height:22px}
+.warn b{color:var(--gold);letter-spacing:.1em}
+textarea{width:100%;min-height:92px;border:1px solid var(--line);padding:12px;font:400 15px/23px Jost,Arial;resize:vertical;background:var(--white);color:var(--blue)}
+textarea:focus,input:focus,select:focus{outline:1px solid var(--blue)}
+input[type=url],input[type=text],select{width:100%;border:1px solid var(--line);padding:12px;font:400 15px Jost,Arial;background:var(--white);color:var(--blue)}
+.fld{display:flex;flex-direction:column;gap:6px}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{background:var(--white);border:1px solid var(--line);padding:12px 14px;font-size:14px;line-height:22px;display:flex;gap:10px}
+.sq{width:10px;height:10px;flex:none;margin-top:6px}
+.sheet{position:fixed;inset:0;background:rgba(18,35,63,.5);display:none;align-items:flex-end;justify-content:center;z-index:9}
+.sheet.on{display:flex}
+.sheet .in{background:var(--paper);width:100%;max-width:480px;padding:22px 20px;display:flex;flex-direction:column;gap:12px;border-top:2px solid var(--gold)}
+.done{text-align:center;padding:24px 6px;display:flex;flex-direction:column;gap:12px;align-items:center}
+footer{padding:16px 20px 26px;font-size:12px;color:var(--slate);text-align:center;border-top:1px solid var(--line)}
+
+.tag2{font-size:12px;color:var(--slate)}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font:500 12px Jost;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.err{border:1px solid var(--gold);padding:12px;font-size:14px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="logo" aria-label="HBB Harbor Beyond Borders"><span class="mono">HBB</span><span class="nm"><b id="lgN">HARBOR</b><i id="lgD">BEYOND BORDERS</i></span></div>
+<div class="ctx"><div class="lbl" id="roleL">Revisão</div><button class="navb" id="homeBtn" hidden>Início</button></div>
+</header>
+<main id="v"><p class="sec">A carregar…</p></main>
+<footer>HBB Revisão · uso interno</footer>
+</div>
+<div class="sheet" id="sheet"><div class="in" id="shIn"></div></div>
+<script>
+const AREAS={IM:"Imigração e Nacionalidade",CT:"Contratos",LB:"Direito Laboral",CM:"Comercial e Empresas",IB:"Real Estate",RG:"RGPD e Compliance",FORA:"Fora das 6 áreas"};
+const ROLE_NAME={a1:"Advogada 1",a2:"Advogada 2",rui:"Rui"};
+const v=document.getElementById('v'),hb=document.getElementById('homeBtn'),sheet=document.getElementById('sheet'),shIn=document.getElementById('shIn'),roleL=document.getElementById('roleL');
+const qs=new URLSearchParams(location.search),AS=qs.get('as');
+let ME=null;
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+async function api(p,opt={}){const u='/api/revisao/'+p+(AS?(p.includes('?')?'&':'?')+'as='+AS:'');
+const r=await fetch(u,{method:opt.body?'POST':'GET',headers:{'content-type':'application/json'},body:opt.body?JSON.stringify(opt.body):undefined,credentials:'same-origin'});
+let d={};try{d=await r.json()}catch(e){}if(!r.ok)throw new Error(d.error||('Erro '+r.status));return d}
+function fail(e){v.innerHTML=`<div class="err"><b>Não foi possível concluir.</b><br>${esc(e.message)}</div><button class="btn" onclick="home()">Voltar ao início</button>`}
+function fitLogo(){const n=document.getElementById('lgN'),d=document.getElementById('lgD');d.style.letterSpacing='0px';const w=n.getBoundingClientRect().width,c=d.textContent.length,dw=d.getBoundingClientRect().width;d.style.letterSpacing=Math.max(0,(w-dw)/(c-1))+'px';d.style.marginRight='-'+d.style.letterSpacing}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fitLogo);
+function closeSheet(){sheet.classList.remove('on')}sheet.onclick=e=>{if(e.target===sheet)closeSheet()};
+function sub(){hb.hidden=false}hb.onclick=()=>home();
+const loc=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},sloc=(k,x)=>{try{localStorage.setItem(k,JSON.stringify(x))}catch(e){}};
+/* ---------- arranque ---------- */
+(async()=>{try{ME=await api('me')}catch(e){
+ v.innerHTML=`<h1>Sem acesso</h1><hr class="rule"><p class="sec">Esta conta não tem acesso à plataforma. Fale com o Rui.</p>`;return}
+ roleL.textContent=ROLE_NAME[ME.role];home()})();
+function goalBox(s){const a=s.by.a1||0,b=s.by.a2||0,t=a+b,pc=Math.min(100,t/s.goal*100);
+const mn=new Date(s.month+'-01').toLocaleDateString('pt-PT',{month:'long'});
+const row=(k,n)=>`<div class="row" style="align-items:center;gap:10px"><span style="flex:none;width:150px;font-size:14px;${k===ME.role?'font-weight:500':''}">${ROLE_NAME[k]}${k===ME.role?' (você)':''}</span><div class="bar" style="height:6px"><i style="width:${n/s.goal*100}%;background:${k==='a1'?'var(--blue)':'var(--gold)'}"></i></div><span style="flex:none;width:28px;text-align:right;font-weight:500">${n}</span></div>`;
+return `<div class="page" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+<div class="row" style="align-items:baseline"><span class="lbl">Objetivo de ${mn}</span><span style="flex:none;font:400 22px 'Libre Caslon Text',Georgia,serif">${t} <span class="sec">de ${s.goal}</span></span></div>
+<div class="bar" style="height:8px"><i style="width:${pc}%"></i></div>
+<p class="sec" style="margin:0">${t>=s.goal?'Objetivo do mês atingido.':`Faltam ${s.goal-t} artigos aprovados este mês.`}</p>${row('a1',a)}${row('a2',b)}</div>`}
+async function home(){hb.hidden=true;v.innerHTML='<p class="sec">A carregar…</p>';let s;try{s=await api('summary')}catch(e){return fail(e)}
+if(ME.role==='rui')return ruiHome(s);const st=s.status;
+v.innerHTML=`<div class="lbl">${ME.areas.filter(a=>a!=='FORA').map(a=>AREAS[a]).join(' · ')}</div><h1>O que está à sua espera</h1><hr class="rule">${goalBox(s)}
+<button class="tile" id="goT"><span class="num ${s.pendingTopics?'f':''}">${s.pendingTopics}</span><span><b>Temas para decidir</b><span class="sec">Deslize para a direita para escrever, para a esquerda para não escrever.</span></span></button>
+<button class="tile" id="goA"><span class="num ${st.review?'f':''}">${st.review||0}</span><span><b>Artigos para rever</b><span class="sec">${[s.writing?s.writing+' em escrita':'',(st.fixing||0)+(st.rewriting||0)?((st.fixing||0)+(st.rewriting||0))+' com o Claude':'',st.final?st.final+' aprovados':''].filter(Boolean).join(' · ')||'Os artigos dos temas que escolher aparecem aqui.'}</span></span></button>
+<button class="tile" id="goS"><span class="num">+</span><span><b>Sugerir um artigo</b><span class="sec">Uma pergunta de um cliente, uma lei nova, um tema que falta. Vai direto para escrita.</span></span></button>
+<button class="btn" id="goL">O que o Claude aprendeu consigo</button>`;
+goT.onclick=deck;goA.onclick=artList;goS.onclick=suggest;goL.onclick=learned}
+/* ---------- temas ---------- */
+let TQ=[];
+function card(t){return `<div class="lbl">${esc(AREAS[t.area])}${t.audience?' · '+esc(t.audience):''}</div>
+${t.area==='FORA'?'<span class="flagt">Fora das 6 áreas · decidir se escrevemos</span>':''}${t.area==='CM'?'<span class="flagt">Área partilhada · fica com quem escolher primeiro</span>':''}
+<h3>${esc(t.title)}</h3>
+${t.question&&t.question!==t.title?`<div><div class="lbl" style="color:var(--slate)">Pergunta real</div><div class="q">${esc(t.question)}</div></div>`:''}
+${t.answers?`<div><div class="lbl" style="color:var(--slate)">O artigo responde a</div><p class="sec">${esc(t.answers)}</p></div>`:''}
+${t.origin?`<div><div class="lbl" style="color:var(--slate)">Origem</div><p class="sec">${esc(t.origin)}${t.competitors?' · já tratado por '+esc(t.competitors):' · sem concorrência encontrada'}</p></div>`:''}
+${t.note?`<p class="sec" style="border-left:1px solid var(--gold);padding-left:10px">${esc(t.note)}</p>`:''}
+<span class="stamp s-yes">ESCREVER</span><span class="stamp s-no">NÃO</span>`}
+async function deck(reload=true){sub();if(reload){v.innerHTML='<p class="sec">A carregar…</p>';try{TQ=await api('topics')}catch(e){return fail(e)}}
+if(!TQ.length)return deckDone();const t=TQ[0],n=TQ[1];const hist=loc('hist_'+ME.role,[]);
+v.innerHTML=`<div class="row" style="align-items:center;gap:14px"><div class="bar"><i style="width:0"></i></div><span class="sec" style="flex:none">${TQ.length} por decidir</span></div>
+<div class="deck">${n?`<div class="sc back">${card(n)}</div>`:''}<div class="sc" id="top">${card(t)}</div></div>
+<div class="acts"><button class="rb sm" id="bU" aria-label="Desfazer" ${hist.length?'':'disabled style="opacity:.3"'}>↶</button><button class="rb no" id="bN" aria-label="Não escrever">✕</button><button class="rb may" id="bM" aria-label="Sim, com nota">?</button><button class="rb yes" id="bY" aria-label="Escrever">✓</button></div>
+<p class="hint">✓ escrever · ✕ não escrever · ? sim, com uma nota · ↶ desfazer</p>`;
+const el=document.getElementById('top'),sy=el.querySelector('.s-yes'),sn=el.querySelector('.s-no');let x0=null,dx=0;
+el.onpointerdown=e=>{x0=e.clientX;dx=0;el.classList.add('drag');el.setPointerCapture(e.pointerId)};
+el.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;el.style.transform=`translateX(${dx}px) rotate(${dx/22}deg)`;sy.style.opacity=Math.max(0,dx/100);sn.style.opacity=Math.max(0,-dx/100)};
+el.onpointerup=()=>{el.classList.remove('drag');x0=null;if(dx>100)decide(t,'sim');else if(dx<-100)decide(t,'nao');else{el.style.transform='';sy.style.opacity=sn.style.opacity=0}};
+bY.onclick=()=>decide(t,'sim');bN.onclick=()=>decide(t,'nao');bM.onclick=()=>noteSheet(t);bU.onclick=undoDeck}
+async function decide(t,d,note){const el=document.getElementById('top');if(el){el.style.pointerEvents='none';el.style.transform=`translateX(${d==='nao'?-600:600}px) rotate(${d==='nao'?-20:20}deg)`}
+try{await api('topics/'+encodeURIComponent(t.id)+'/decide',{body:{decision:d,note}})}catch(e){return fail(e)}
+const h=loc('hist_'+ME.role,[]);h.push(t.id);sloc('hist_'+ME.role,h.slice(-30));TQ.shift();setTimeout(()=>deck(false),200)}
+async function undoDeck(){const h=loc('hist_'+ME.role,[]),id=h.pop();if(!id)return;
+try{await api('topics/'+encodeURIComponent(id)+'/decide',{body:{decision:null}})}catch(e){sloc('hist_'+ME.role,h);return fail(e)}sloc('hist_'+ME.role,h);deck()}
+function noteSheet(t){shIn.innerHTML=`<div class="lbl">Sim, com uma nota</div><h2>Em que condições?</h2><p class="sec">No telemóvel pode ditar com o microfone do teclado.</p>
+<textarea id="shTx" placeholder="Ex.: só como enquadramento, sem cálculo de impostos"></textarea><div class="row"><button class="btn q" id="shC">Cancelar</button><button class="btn p" id="shOk">Guardar</button></div>`;
+sheet.classList.add('on');setTimeout(()=>shTx.focus(),50);shC.onclick=closeSheet;shOk.onclick=()=>{closeSheet();decide(t,'mas',shTx.value.trim()||'(sem nota)')}}
+document.onkeydown=e=>{if(!document.getElementById('top')||sheet.classList.contains('on'))return;const t=TQ[0];if(e.key==='ArrowRight')decide(t,'sim');if(e.key==='ArrowLeft')decide(t,'nao');if(e.key==='ArrowUp')noteSheet(t);if(e.key==='Backspace')undoDeck()};
+async function deckDone(){sub();let D=[];try{D=await api('topics/decided')}catch(e){}
+const today=D.filter(t=>t.decided_at&&t.decided_at.slice(0,10)===new Date().toISOString().slice(0,10)),yes=today.filter(t=>t.decision!=='nao').length;
+const lab={sim:['Escrever','var(--blue)'],nao:['Não escrever','var(--slate)'],mas:['Escrever, com nota','var(--gold)']};
+v.innerHTML=`<div class="done" style="padding-top:8px"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Está feito</h1>
+<p class="sec">${yes?`Hoje escolheu ${yes} ${yes===1?'tema':'temas'} para escrever. O Claude escreve-os durante a noite e amanhã de manhã aparecem em <b>Artigos para rever</b>.`:'Não há mais temas para decidir.'} Não precisa de fazer mais nada.</p></div>
+<button class="btn p" id="more">Pedir mais temas</button><p class="hint" id="moreH">Junta os 10 temas seguintes das suas áreas.</p>
+${today.length?`<div class="list"><div class="lbl">Decisões de hoje</div>${today.map(t=>`<div class="li"><span class="sq" style="background:${lab[t.decision][1]}"></span><span><b>${lab[t.decision][0]}</b> · ${esc(t.title)}${t.decision_note?`<br><span class="sec">${esc(t.decision_note)}</span>`:''}</span></div>`).join('')}</div>`:''}
+${loc('hist_'+ME.role,[]).length?'<button class="btn" id="un">↶ Desfazer a última decisão</button>':''}<button class="btn q" id="bk">Voltar ao início</button>`;
+bk.onclick=home;if(window.un)un.onclick=undoDeck;
+more.onclick=async()=>{more.disabled=true;moreH.textContent='A juntar temas…';try{const r=await api('topics/more',{body:{}});
+if(!r.added){moreH.textContent='Não há mais temas no backlog das suas áreas. O Rui vai juntar novos.';return}deck()}catch(e){fail(e)}}}
+/* ---------- sugestões e aprendizagem ---------- */
+function suggest(){sub();const ar=ME.areas.filter(a=>a!=='FORA');
+v.innerHTML=`<div class="lbl">Sugestão</div><h1>Sugerir um artigo</h1><hr class="rule">
+<p class="sec">Escreva como um cliente perguntaria. O Claude escreve o artigo esta noite e ele aparece em Artigos para rever.</p>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Pergunta ou tema *</span><textarea id="sQ"></textarea></div>
+<div class="row"><div class="fld"><span class="lbl" style="color:var(--slate)">Área</span><select id="sA">${ar.map(a=>`<option value="${a}">${AREAS[a]}</option>`).join('')}</select></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Público</span><select id="sP"><option>Empresas</option><option>Pessoas que se mudam</option><option>Ambos</option></select></div></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Porque é importante? (opcional)</span><textarea id="sW" style="min-height:70px"></textarea></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Fonte oficial (opcional)</span><input type="url" id="sL" placeholder="https://diariodarepublica.pt/…"></div>
+<p class="sec" id="sE" style="color:var(--gold)"></p><button class="btn p" id="sGo">Enviar sugestão</button><button class="btn q" id="bk">Cancelar</button>`;
+bk.onclick=home;sGo.onclick=async()=>{const q=sQ.value.trim();if(q.length<10){sE.textContent='Escreva a pergunta ou o tema.';return}sGo.disabled=true;
+try{await api('suggest',{body:{question:q,area:sA.value,audience:sP.value,why:sW.value.trim(),link:sL.value.trim()}})}catch(e){return fail(e)}
+v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Sugestão recebida</h1><p class="sec">O Claude escreve este artigo esta noite. Amanhã de manhã aparece em <b>Artigos para rever</b>.</p></div><button class="btn p" id="again">Sugerir outro</button><button class="btn q" id="bk">Voltar ao início</button>`;again.onclick=suggest;bk.onclick=home}}
+async function learned(who){sub();let L;try{L=await api('learned'+(who?'?who='+who:''))}catch(e){return fail(e)}
+const yes=L.topics.filter(t=>t.decision!=='nao'),no=L.topics.filter(t=>t.decision==='nao'),sug=L.topics.filter(t=>t.suggested_by);
+const cnt={};yes.forEach(t=>cnt[t.area]=(cnt[t.area]||0)+1);const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`${AREAS[a]} (${n})`).join(' · ');
+const it=(c,t)=>`<div class="li"><span class="sq" style="background:${c}"></span><span>${t}</span></div>`;
+v.innerHTML=`<div class="lbl">Aprendizagem</div><h1>O que o Claude aprendeu${who?'':' consigo'}</h1><hr class="rule"><p class="sec">Tudo o que decide é lido antes de propor e escrever os artigos seguintes.</p>
+<div class="list"><div class="lbl">Temas preferidos</div>${top?it('var(--blue)',esc(top)):it('var(--line)','Ainda sem dados.')}${sug.map(t=>it('var(--blue)','Sugeriu: '+esc(t.title))).join('')}
+<div class="lbl" style="margin-top:8px">Temas recusados</div>${no.slice(0,15).map(t=>it('var(--slate)',esc(t.title))).join('')||it('var(--line)','Nenhum.')}
+<div class="lbl" style="margin-top:8px">Correções</div>${L.fixes.map(f=>it('var(--gold)',esc(f.detail))).join('')||it('var(--line)','Ainda sem correções.')}</div><button class="btn p" id="bk">Voltar</button>`;bk.onclick=home}
+/* ---------- artigos ---------- */
+const LAB={review:['Para rever','var(--blue)'],fixing:['Com o Claude · volta amanhã','var(--gold)'],rewriting:['A ser reescrito · volta amanhã','var(--gold)'],final:['Aprovado','var(--slate)'],published:['Publicado','var(--slate)']};
+async function artList(){sub();let L;try{L=await api('articles')}catch(e){return fail(e)}
+v.innerHTML=`<div class="lbl">Artigos</div><h1>Os seus artigos</h1><hr class="rule"><div class="list">${L.map(a=>`<button class="tile" data-id="${esc(a.id)}" ${a.status==='review'||a.status==='final'?'':'disabled'}><span class="sq" style="width:12px;height:12px;margin:0;background:${LAB[a.status][1]}"></span><span><span class="lbl" style="color:var(--slate);display:block">${LAB[a.status][0]}${a.version>1?' · versão '+a.version:''}</span><b>${esc(a.title)}</b></span></button>`).join('')||'<p class="sec">Ainda sem artigos. Escolha temas ou sugira um.</p>'}</div><button class="btn q" id="bk">Voltar ao início</button>`;
+bk.onclick=home;v.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>article(b.dataset.id))}
+let A=null,F=null;const fkey=()=>'f_'+A.id+'_v'+A.version;
+async function article(id,edit){sub();if(!A||A.id!==id){try{A=await api('articles/'+encodeURIComponent(id))}catch(e){return fail(e)}}
+F=loc(fkey(),{fx:{},fxn:{},read:false,edited:null});const all=A.facts.length,done=Object.keys(F.fx).length,nf=Object.keys(F.fxn).length;
+if(A.status==='final'){v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Versão final aprovada</h1><p class="sec">Segue para o Rui publicar. Não precisa de fazer mais nada.</p></div>
+<article class="page"><div class="pg"><h1>${esc(A.title)}</h1><div class="meta">Aprovado</div>${A.body_html}</div></article><button class="btn q" id="dU">↶ Desfazer aprovação</button><button class="btn p" id="bk">Ver os outros artigos</button>`;
+dU.onclick=async()=>{try{await api('articles/'+encodeURIComponent(A.id)+'/decide',{body:{action:'undo'}});A=null;article(id)}catch(e){fail(e)}};bk.onclick=artList;return}
+const fixes=Object.keys(F.fxn).map(k=>`<div class="li"><span class="sq" style="background:var(--gold)"></span><span><b>Facto ${+k+1}:</b> ${esc(F.fxn[k])}</span></div>`).join('');
+v.innerHTML=`<div class="lbl">${AREAS[A.area]}${A.audience?' · '+esc(A.audience):''}${A.version>1?' · versão '+A.version:''}</div>
+<p class="sec">${edit?'Toque no texto para corrigir.':'O artigo como vai aparecer no site. Os factos sublinhados têm fonte; toque num para o confirmar.'}</p>
+${fixes&&!edit?`<div class="list"><div class="lbl">As suas correções</div>${fixes}</div>`:''}
+<article class="page"><div class="pg"><h1>${esc(A.title)}</h1><div class="meta">HBB – Harbor Beyond Borders · Última verificação: ${new Date(A.updated_at).toLocaleDateString('pt-PT')}</div>
+<div id="artB" ${edit?'contenteditable="true" class="edit"':''}>${F.edited||A.body_html}</div>
+<h2>Fontes</h2><p class="src">${A.facts.map((f,i)=>`${i+1}. <a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.src)}</a>`).join('<br>')}</p><div class="cta">Marcar primeira reunião</div></div></article>
+${edit?'<button class="btn p" id="eSv">Guardar alterações</button><button class="btn q" id="eCn">Cancelar</button>':`
+<button class="btn ${done<all?'p':''}" id="aF">${done<all?(done?`Factos confirmados: ${done} de ${all} · continuar`:`Confirmar os ${all} factos`):`Factos: ${all-nf} certos, ${nf} a corrigir · rever outra vez`}</button>
+<div class="row"><button class="btn" id="eEd">✎ Editar o texto</button><button class="btn" id="aQ">Enviar dúvida</button></div>
+${F.edited?'<button class="btn q" id="eRs">↶ Desfazer alterações ao texto</button>':''}
+<div class="lbl" style="margin-top:8px">Decisão</div>
+<label class="li" style="cursor:pointer;align-items:center"><input type="checkbox" id="rd" ${F.read?'checked':''} style="width:20px;height:20px;accent-color:#12233F"><span>Li o texto completo</span></label>
+<button class="btn p" id="aY" disabled>Aprovar a versão final</button><button class="btn g" id="aW" disabled>Enviar as correções ao Claude</button><button class="btn q" id="aN">Rejeitar e pedir nova versão</button><p class="hint" id="hn"></p>`}`;
+const b=document.getElementById('artB');
+if(edit){eSv.onclick=()=>{F.edited=b.innerHTML;sloc(fkey(),F);article(id)};eCn.onclick=()=>article(id);return}
+b.querySelectorAll('.fx').forEach(e=>{const i=+e.dataset.f;e.classList.toggle('ok',F.fx[i]==='ok');e.classList.toggle('bad',!!F.fx[i]&&F.fx[i]!=='ok');e.onclick=()=>facts(i)});
+const ch=nf>0||!!F.edited;const upd=()=>{aY.disabled=!(F.read&&done===all&&!ch);aW.disabled=!ch;hn.textContent=ch?'Tem correções: envie-as ao Claude. A nova versão volta a si amanhã.':(done<all?'Confirme todos os factos para poder aprovar.':(!F.read?'Marque "Li o texto completo" para aprovar.':'Pronto a aprovar.'))};upd();
+rd.onchange=()=>{F.read=rd.checked;sloc(fkey(),F);upd()};
+aF.onclick=()=>{const k=A.facts.findIndex((_,i)=>!F.fx[i]);facts(k<0?0:k)};eEd.onclick=()=>article(id,true);aQ.onclick=()=>doubt(null);
+if(window.eRs)eRs.onclick=()=>{F.edited=null;sloc(fkey(),F);article(id)};
+const send=async(action)=>{try{await api('articles/'+encodeURIComponent(A.id)+'/decide',{body:{action,fixes:F.fxn,edited_html:F.edited}})}catch(e){return fail(e)}
+const t={approve:['✓','Versão final aprovada','Segue para o Rui publicar. Não precisa de fazer mais nada.'],fix:['↻','Correções enviadas','O Claude aplica-as esta noite. Amanhã de manhã a nova versão volta a si.'],reject:['↻','Pedido de nova versão enviado','O Claude reescreve o artigo esta noite. Amanhã volta a si.']}[action];
+const aid=A.id;A=null;v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">${t[0]}</span><h1>${t[1]}</h1><p class="sec">${t[2]}</p></div><button class="btn q" id="dU">↶ Desfazer</button><button class="btn p" id="bk">Ver os outros artigos</button>`;
+dU.onclick=async()=>{try{await api('articles/'+encodeURIComponent(aid)+'/decide',{body:{action:'undo'}});article(aid)}catch(e){fail(e)}};bk.onclick=artList};
+aY.onclick=()=>send('approve');aW.onclick=()=>send('fix');aN.onclick=()=>send('reject')}
+function ctxOf(i){const d=document.createElement('div');d.innerHTML=A.body_html;const e=d.querySelector(`.fx[data-f="${i}"]`);return e?(e.closest('p,li')||e).textContent:''}
+function facts(i){sub();const N=A.facts,f=N[i];
+v.innerHTML=`<div class="row" style="align-items:center;gap:14px"><div class="bar"><i style="width:${Object.keys(F.fx).length/N.length*100}%"></i></div><span class="sec" style="flex:none">Facto ${i+1} de ${N.length}</span></div>
+<div class="fact"><div class="lbl">Facto ${i+1} · ${esc(A.title)}</div><div class="t">${esc(f.t)}</div>${f.flag?`<div class="warn"><b>VERIFICAR</b> · ${esc(f.flag)}</div>`:''}
+<div><div class="lbl" style="color:var(--slate)">No texto</div><p class="ctxp">${esc(ctxOf(i))}</p></div>
+<div><div class="lbl" style="color:var(--slate)">Fonte oficial</div><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.src)} ↗</a></div>
+<div id="fixw" style="display:none;flex-direction:column;gap:10px"><textarea id="fixtx" placeholder="O que está errado e qual é a regra ou o valor certo?"></textarea>
+<button class="btn" id="fEd">✎ Corrigir diretamente no texto</button><button class="btn" id="fQ">Enviar dúvida ao Rui por WhatsApp</button></div></div>
+<div class="row" id="fb"><button class="btn q" id="fN">✕ Corrigir</button><button class="btn p" id="fY">✓ Certo</button></div>
+<div class="row"><button class="btn q" id="fU" ${i?'':'disabled'}>↶ Anterior</button><button class="btn" id="fA">Ver o artigo</button></div>`;
+const next=()=>{sloc(fkey(),F);const k=N.findIndex((_,j)=>!F.fx[j]);k<0?article(A.id):facts(k)};
+fU.onclick=()=>{delete F.fx[i-1];delete F.fxn[i-1];sloc(fkey(),F);facts(i-1)};fA.onclick=()=>article(A.id);
+fY.onclick=()=>{F.fx[i]='ok';delete F.fxn[i];next()};
+fN.onclick=()=>{fixw.style.display='flex';fixtx.focus();fb.innerHTML='<button class="btn q" id="fBk">Cancelar</button><button class="btn g" id="fSv">Guardar correção</button>';
+fBk.onclick=()=>facts(i);fSv.onclick=()=>{F.fx[i]='fix';F.fxn[i]=fixtx.value.trim()||'(sem texto)';next()};
+fEd.onclick=()=>{F.fx[i]='fix';F.fxn[i]=(fixtx.value.trim()?fixtx.value.trim()+' · ':'')+'corrigido no texto';sloc(fkey(),F);article(A.id,true)};fQ.onclick=()=>doubt(i,fixtx.value.trim())}}
+function doubt(i,pre){const f=i===null?null:A.facts[i];
+shIn.innerHTML=`<div class="lbl">Dúvida</div><h2>Mensagem para o Rui</h2><p class="sec">Abre o WhatsApp com a mensagem já escrita. Só tem de carregar em enviar.</p>
+<textarea id="qTx">${esc(pre||'')}</textarea><a class="btn p" id="qGo" target="_blank" rel="noopener">Abrir no WhatsApp</a><button class="btn q" id="qC">Cancelar</button>`;sheet.classList.add('on');
+const upd=()=>qGo.href=`https://wa.me/${ME.wa}?text=${encodeURIComponent(`HBB Revisão · dúvida\nArtigo: ${A.title} (${A.id})\n${f?`Facto ${i+1}: ${f.t}\n`:''}Dúvida: ${qTx.value.trim()||'—'}`)}`;upd();qTx.oninput=upd;
+qGo.onclick=()=>{if(i!==null){F.fx[i]='call';F.fxn[i]=(qTx.value.trim()||'dúvida')+' · enviada ao Rui por WhatsApp';sloc(fkey(),F)}setTimeout(()=>{closeSheet();i===null?article(A.id):facts(i)},300)};qC.onclick=closeSheet}
+/* ---------- Rui ---------- */
+async function ruiHome(s){hb.hidden=true;let L=[];try{L=await api('articles')}catch(e){return fail(e)}
+const st=s.status,row=a=>`<tr><td>${esc(a.title)}<br><span class="tag2">${AREAS[a.area]} · v${a.version}</span></td><td>${ROLE_NAME[a.owner]}</td><td>${LAB[a.status][0].split(' ·')[0]}</td><td>${a.status==='final'?`<button class="navb" data-dl="${esc(a.id)}">.md</button>`:''}</td></tr>`;
+v.innerHTML=`<div class="lbl">Visão geral</div><h1>Artigos</h1><hr class="rule">${goalBox(s)}
+<div class="row"><div class="li" style="flex-direction:column;gap:0"><b style="font-size:20px">${s.writing}</b><span class="sec">por escrever</span></div><div class="li" style="flex-direction:column;gap:0"><b style="font-size:20px">${st.review||0}</b><span class="sec">em revisão</span></div><div class="li" style="flex-direction:column;gap:0"><b style="font-size:20px">${st.final||0}</b><span class="sec">por publicar</span></div></div>
+<button class="btn p" id="dlAll" ${st.final?'':'disabled'}>Descarregar os ${st.final||0} aprovados (PT, .zip)</button>
+<p class="hint">Cada ficheiro .md tem os metadados (título, descrição, data, área) e o texto em HTML, pronto a importar. Depois de importar, marque como publicados.</p>
+<button class="btn" id="mkPub" ${st.final?'':'disabled'}>Marcar os aprovados como publicados</button>
+<div class="page" style="padding:6px 10px;overflow-x:auto"><table><tr><th>Artigo</th><th>Revê</th><th>Estado</th><th></th></tr>${L.map(row).join('')||'<tr><td colspan="4" class="sec">Ainda sem artigos.</td></tr>'}</table></div>
+<div class="row"><button class="btn" id="l1">Aprendizagem · Advogada 1</button><button class="btn" id="l2">Aprendizagem · Advogada 2</button></div>`;
+l1.onclick=()=>learned('a1');l2.onclick=()=>learned('a2');
+v.querySelectorAll('[data-dl]').forEach(b=>b.onclick=async()=>{const X=await api('admin/export');const a=X.find(x=>x.id===b.dataset.dl);if(a)saveFile(a.id+'.md',toMd(a))});
+dlAll.onclick=async()=>{const X=await api('admin/export');if(!window.JSZip){X.forEach(a=>saveFile(a.id+'.md',toMd(a)));return}const z=new JSZip();X.forEach(a=>z.file(a.id+'.md',toMd(a)));saveFile('hbb-artigos-pt-'+new Date().toISOString().slice(0,10)+'.zip',await z.generateAsync({type:'blob'}))};
+mkPub.onclick=async()=>{const X=await api('admin/export');for(const a of X)await api('admin/published/'+encodeURIComponent(a.id),{body:{}});home()}}
+function clean(html){const d=document.createElement('div');d.innerHTML=html;d.querySelectorAll('.fx sup').forEach(s=>s.remove());d.querySelectorAll('.fx,.vf').forEach(s=>s.replaceWith(...s.childNodes));return d.innerHTML.trim()}
+function toMd(a){const fm=['---',`title: ${JSON.stringify(a.title)}`,`description: ${JSON.stringify(a.description||'')}`,`date: ${(a.approved_at||a.updated_at).slice(0,10)}`,`category: ${JSON.stringify(AREAS[a.area])}`,`audience: ${JSON.stringify(a.audience||'')}`,'lang: pt','author: "HBB"','---',''].join('\n');
+return fm+clean(a.body_html)+'\n\n<h2>Fontes</h2>\n<ol>\n'+a.facts.map(f=>`<li><a href="${f.url}">${f.src}</a></li>`).join('\n')+'\n</ol>\n'}
+function saveFile(name,data){const blob=data instanceof Blob?data:new Blob([data],{type:'text/markdown;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove()},500)}
+</script>
+</body>
+</html>

@@ -107,6 +107,7 @@ footer{padding:16px 20px 26px;font-size:12px;color:var(--slate);text-align:cente
 </div>
 <div class="sheet" id="sheet"><div class="in" id="shIn"></div></div>
 <script>
+const GOAL=40; // objetivo mensal da equipa (artigos aprovados)
 const WA_RUI="351000000000"; // número do Rui (formato internacional, sem +)
 const AREAS={IM:"Imigração e Nacionalidade",CT:"Contratos",LB:"Direito Laboral",CM:"Comercial e Empresas",IB:"Real Estate",RG:"RGPD e Compliance",FORA:"Fora das 6 áreas"};
 const ROLES={a1:{name:"Advogada 1",areas:["IM","CM","FORA"]},a2:{name:"Advogada 2",areas:["CT","LB","CM","IB","RG","FORA"]}};
@@ -184,9 +185,18 @@ function st(id){const r=R();return r.arts[id]||(r.arts[id]={fx:{},fxn:{},status:
 function status(x){const r=R(),s=st(x.a.id);if(r.day<x.ready)return'writing';if(['fixing','rewriting'].includes(s.status)&&r.day>s.at){s.status='review';s.v++;s.read=false;if(s.rw){s.fx={};s.fxn={};s.edited=null;s.rw=0}else{Object.keys(s.fxn).forEach(k=>{delete s.fx[k];delete s.fxn[k]})}save()}return s.status}
 const LAB={writing:['Em escrita','Chega amanhã de manhã','var(--line)'],review:['Para rever','','var(--blue)'],fixing:['Com o Claude','Volta amanhã de manhã','var(--gold)'],rewriting:['A ser reescrito','Volta amanhã de manhã','var(--gold)'],final:['Versão final','Segue para tradução e publicação','var(--slate)']};
 function sim24(back){R().day++;save();back()}
+function finals(k){return Object.values(S.r[k].arts).filter(s=>s.status==='final').length}
+function goalBox(){const a=finals('a1'),b=finals('a2'),t=a+b,pc=Math.min(100,t/GOAL*100),me=S.role;
+const row=(k,n)=>`<div class="row" style="align-items:center;gap:10px"><span style="flex:none;width:150px;font-size:14px;${k===me?'font-weight:500':''}">${ROLES[k].name}${k===me?' (você)':''}</span><div class="bar" style="height:6px"><i style="width:${GOAL?n/GOAL*100:0}%;background:${k==='a1'?'var(--blue)':'var(--gold)'}"></i></div><span style="flex:none;width:28px;text-align:right;font-weight:500">${n}</span></div>`;
+return `<div class="page" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+<div class="row" style="align-items:baseline"><span class="lbl">Objetivo de ${new Date().toLocaleDateString('pt-PT',{month:'long'})}</span><span style="flex:none;font:400 22px 'Libre Caslon Text',Georgia,serif">${t} <span class="sec">de ${GOAL}</span></span></div>
+<div class="bar" style="height:8px"><i style="width:${pc}%"></i></div>
+<p class="sec" style="margin:0">${t>=GOAL?'Objetivo do mês atingido.':`Faltam ${GOAL-t} artigos aprovados este mês.`} Contam os artigos aprovados na versão final.</p>
+${row('a1',a)}${row('a2',b)}</div>`}
 /* ---------- home ---------- */
 function home(){hb.hidden=false;hb.textContent='Trocar';v.dataset.s='home';roleL.textContent=ROLES[S.role].name;const r=R(),arts=myArts(),c={};arts.forEach(x=>{const s=status(x);c[s]=(c[s]||0)+1});
 v.innerHTML=`<div class="lbl">${ROLES[S.role].areas.filter(a=>a!=='FORA').map(a=>AREAS[a]).join(' · ')}</div><h1>O que está à sua espera</h1><hr class="rule">
+${goalBox()}
 <button class="tile" id="goT"><span class="num ${pending().length?'f':''}">${pending().length}</span><span><b>Temas para decidir</b><span class="sec">Escolha o que deve ser escrito. Deslize para a direita para escrever, para a esquerda para não escrever.</span></span></button>
 <button class="tile" id="goA"><span class="num ${c.review?'f':''}">${c.review||0}</span><span><b>Artigos para rever</b><span class="sec">${[c.writing?c.writing+' em escrita':'',c.fixing||c.rewriting?((c.fixing||0)+(c.rewriting||0))+' com o Claude':'',c.final?c.final+' em versão final':''].filter(Boolean).join(' · ')||'Os artigos dos temas que escolher aparecem aqui.'}</span></span></button>
 <button class="tile" id="goS"><span class="num">+</span><span><b>Sugerir um artigo</b><span class="sec">Uma pergunta de um cliente, uma lei nova, um tema que falta. Vai direto para escrita.</span></span></button>

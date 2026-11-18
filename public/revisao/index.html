@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HBB Revisão — protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Libre+Caslon+Text:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#12233F;--gold:#8C6A2F;--goldl:#C2A061;--ivory:#F4EFE6;--paper:#F7F4EE;--slate:#4A5260;--white:#FFFFFF;--line:#E4DED2}
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+body{font-family:Jost,Arial,sans-serif;background:var(--paper);color:var(--blue);font-size:16px;line-height:26px;-webkit-tap-highlight-color:transparent}
+.serif{font-family:"Libre Caslon Text",Georgia,serif}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--white);border-bottom:1px solid var(--gold);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mono{width:54px;height:54px;background:var(--blue);color:var(--ivory);font:700 15px/1 "Libre Caslon Text",Georgia,serif;display:flex;align-items:center;justify-content:center;letter-spacing:.5px}
+.nm{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.nm b{font:700 22px/1 "Libre Caslon Text",Georgia,serif;letter-spacing:2px;color:var(--blue)}
+.nm i{font:500 7.5px/1 Jost,Arial,sans-serif;font-style:normal;color:var(--gold);white-space:nowrap}
+header .ctx{margin-left:auto;text-align:right}
+.lbl{font:500 12px/16px Jost,Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.navb{background:none;border:1px solid var(--blue);color:var(--blue);font:500 13px Jost,Arial;padding:6px 10px;cursor:pointer;margin-top:4px}
+main{flex:1;padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+h1{font:400 28px/34px "Libre Caslon Text",Georgia,serif}
+h2{font:400 22px/30px "Libre Caslon Text",Georgia,serif}
+.sec{color:var(--slate);font-size:14px;line-height:22px}
+.rule{height:1px;background:var(--gold);border:0}
+.tile{background:var(--white);border:1px solid var(--line);padding:18px;display:flex;align-items:center;gap:16px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.tile:hover:not([disabled]){border-color:var(--blue)}
+.tile[disabled]{opacity:.75}
+.tile .lbl{display:block}
+.num{width:44px;height:44px;flex:none;border:1px solid var(--blue);display:flex;align-items:center;justify-content:center;font:400 20px "Libre Caslon Text",Georgia,serif}
+.num.f{background:var(--blue);color:var(--ivory)}
+.tile b{display:block;font-weight:500}
+.btn{border:1px solid var(--blue);padding:13px 16px;font:500 15px Jost,Arial,sans-serif;cursor:pointer;width:100%;background:var(--white);color:var(--blue);text-align:center;text-decoration:none;display:block}
+.btn.p{background:var(--blue);color:var(--ivory)}
+.btn.g{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.btn.q{border-color:var(--slate);color:var(--slate)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.bar{height:2px;background:var(--line)}.bar i{display:block;height:100%;background:var(--gold);transition:width .25s}
+/* deck */
+.deck{position:relative;height:420px}
+.sc{position:absolute;inset:0;background:var(--white);border:1px solid var(--line);border-top:2px solid var(--blue);padding:24px;display:flex;flex-direction:column;gap:14px;touch-action:none;user-select:none;cursor:grab;transition:transform .25s ease}
+.sc.drag{transition:none;cursor:grabbing}
+.sc.back{transform:translateY(10px) scale(.96);pointer-events:none;opacity:.6}
+.sc h3{font:400 21px/29px "Libre Caslon Text",Georgia,serif}
+.sc .q{border-left:1px solid var(--gold);padding:2px 0 2px 12px;font-family:"Libre Caslon Text",Georgia,serif;font-size:15px;line-height:23px}
+.flagt{align-self:flex-start;border:1px solid var(--gold);color:var(--gold);font:500 12px Jost;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px}
+.stamp{position:absolute;top:24px;font:500 14px Jost;letter-spacing:.2em;padding:4px 10px;border:1px solid;opacity:0;background:var(--white)}
+.s-yes{right:24px;color:var(--blue);border-color:var(--blue)}.s-no{left:24px;color:var(--slate);border-color:var(--slate)}
+.acts{display:flex;justify-content:center;gap:14px}
+.rb{width:58px;height:58px;border:1px solid var(--blue);background:var(--white);color:var(--blue);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rb.yes{background:var(--blue);color:var(--ivory)}.rb.no{border-color:var(--slate);color:var(--slate)}.rb.may{border-color:var(--gold);color:var(--gold)}
+.rb.sm{width:46px;height:46px;font-size:18px;align-self:center;border-color:var(--line);color:var(--slate)}
+.hint{text-align:center;font-size:13px;color:var(--slate)}
+/* article (blog view) */
+.page{background:var(--white);border:1px solid var(--line)}
+.cover{height:190px;background:var(--blue);display:flex;align-items:flex-end;padding:14px 18px;color:var(--ivory)}
+.cover small{font:400 13px/20px Jost;opacity:.85}
+.pg{padding:26px 22px 30px}
+.pg .meta{font-size:13px;color:var(--slate);margin:10px 0 18px;padding-bottom:16px;border-bottom:1px solid var(--gold)}
+.pg h1{font-size:27px;line-height:34px}
+.pg h2{font-size:20px;line-height:28px;margin:26px 0 8px}
+.pg p{margin:0 0 14px;color:var(--blue)}
+.pg p.lead{font-family:"Libre Caslon Text",Georgia,serif;font-size:17px;line-height:28px}
+.pg .src{font-size:14px;color:var(--slate)}.pg .src a{color:var(--blue)}
+.fx{border-bottom:1px solid var(--gold);cursor:pointer}
+.fx.on{background-color:var(--ivory)}
+.fx sup{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;border:1px solid var(--gold);color:var(--gold);font:500 10px Jost;margin-left:3px;vertical-align:3px}
+.fx.ok sup{background:var(--blue);border-color:var(--blue);color:var(--ivory)}
+.fx.bad sup{background:var(--gold);border-color:var(--gold);color:var(--white)}
+.vf{background:var(--ivory);padding:0 3px;font-weight:500}
+.cta{border:1px solid var(--blue);padding:12px;text-align:center;font-weight:500;margin-top:20px}
+.edit{outline:1px dashed var(--gold);outline-offset:4px}
+/* fact */
+.fact{background:var(--white);border:1px solid var(--line);border-top:2px solid var(--blue);padding:22px;display:flex;flex-direction:column;gap:14px}
+.fact .t{font:400 18px/27px "Libre Caslon Text",Georgia,serif}
+.ctxp{font-size:14px;line-height:22px;color:var(--slate);border-left:1px solid var(--gold);padding-left:12px}
+.fact a{color:var(--blue)}
+.warn{border:1px solid var(--gold);padding:10px 12px;font-size:14px;line-height:22px}
+.warn b{color:var(--gold);letter-spacing:.1em}
+textarea{width:100%;min-height:92px;border:1px solid var(--line);padding:12px;font:400 15px/23px Jost,Arial;resize:vertical;background:var(--white);color:var(--blue)}
+textarea:focus,input:focus,select:focus{outline:1px solid var(--blue)}
+input[type=url],input[type=text],select{width:100%;border:1px solid var(--line);padding:12px;font:400 15px Jost,Arial;background:var(--white);color:var(--blue)}
+.fld{display:flex;flex-direction:column;gap:6px}
+.list{display:flex;flex-direction:column;gap:8px}
+.li{background:var(--white);border:1px solid var(--line);padding:12px 14px;font-size:14px;line-height:22px;display:flex;gap:10px}
+.sq{width:10px;height:10px;flex:none;margin-top:6px}
+.sheet{position:fixed;inset:0;background:rgba(18,35,63,.5);display:none;align-items:flex-end;justify-content:center;z-index:9}
+.sheet.on{display:flex}
+.sheet .in{background:var(--paper);width:100%;max-width:480px;padding:22px 20px;display:flex;flex-direction:column;gap:12px;border-top:2px solid var(--gold)}
+.done{text-align:center;padding:24px 6px;display:flex;flex-direction:column;gap:12px;align-items:center}
+footer{padding:16px 20px 26px;font-size:12px;color:var(--slate);text-align:center;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="logo" aria-label="HBB Harbor Beyond Borders"><span class="mono">HBB</span><span class="nm"><b id="lgN">HARBOR</b><i id="lgD">BEYOND BORDERS</i></span></div>
+<div class="ctx"><div class="lbl" id="roleL">Revisão</div><button class="navb" id="homeBtn" hidden>Início</button></div>
+</header>
+<main id="v"></main>
+<footer>Protótipo de uso interno · textos e factos de exemplo, não verificados</footer>
+</div>
+<div class="sheet" id="sheet"><div class="in" id="shIn"></div></div>
+<script>
+const WA_RUI="351000000000"; // número do Rui (formato internacional, sem +)
+const AREAS={IM:"Imigração e Nacionalidade",CT:"Contratos",LB:"Direito Laboral",CM:"Comercial e Empresas",IB:"Real Estate",RG:"RGPD e Compliance",FORA:"Fora das 6 áreas"};
+const ROLES={a1:{name:"Advogada 1",areas:["IM","CM","FORA"]},a2:{name:"Advogada 2",areas:["CT","LB","CM","IB","RG","FORA"]}};
+const TOPICS=[
+{id:"110",ar:"FORA",pub:"Pessoas que se mudam",t:"IFICI: quem pode ter o regime fiscal para novos residentes",q:"Ainda há algum regime fiscal especial para quem se muda para Portugal?",a:"Quem pode pedir, até quando e o que fazer antes de chegar.",w:"Fiscal · estava no 1.º lote"},
+{id:"153",ar:"FORA",pub:"Pessoas que se mudam",t:"Herança em Portugal para estrangeiros: a legítima",q:"Posso deixar tudo ao meu cônjuge se viver em Portugal?",a:"Como funciona a legítima e a escolha da lei do país de origem.",w:"Sucessões · estava no 1.º lote"},
+{id:"95",ar:"IM",pub:"Pessoas que se mudam",t:"Nacionalidade portuguesa em 2026: a nova regra dos 10 anos",q:"Tenho residência há 4 anos. Quando posso pedir a nacionalidade?",a:"Os novos prazos, quem tem 7 anos e como se conta o tempo."},
+{id:"108",ar:"IM",pub:"Pessoas que se mudam",t:"Pedidos de nacionalidade entregues antes de maio de 2026: que regras se aplicam?",q:"Entreguei o pedido em abril. A lei nova aplica-se a mim?",a:"O regime transitório e o que fazer se o pedido estiver parado."},
+{id:"1",ar:"IM",pub:"Pessoas que se mudam",t:"Golden Visa em 2026: as vias de investimento que ainda contam",q:"Ainda dá para ter Golden Visa comprando casa?",a:"As vias em vigor, os montantes e o que acabou em 2023."},
+{id:"237",ar:"IM",pub:"Pessoas que se mudam",t:"Inscrever os filhos na escola antes de ter a autorização de residência",q:"Os meus filhos podem começar as aulas antes do cartão de residência?",a:"O que a escola pode pedir e que documentos levar."},
+{id:"N30",ar:"CM",pub:"Empresas",t:"Registo do beneficiário efetivo (RCBE): quem tem de o fazer e quando",q:"Abri uma Lda com um sócio estrangeiro. Temos de declarar alguma coisa?",a:"Quem é beneficiário efetivo, prazos e o que acontece se faltar."},
+{id:"57",ar:"CM",pub:"Empresas",t:"Criar uma empresa em Portugal: Lda ou SA?",q:"Que tipo de sociedade faz sentido para uma startup com investidores?",a:"Diferenças de capital, gestão, sócios e custos de constituição."},
+{id:"N1",ar:"LB",pub:"Empresas",t:"Reforma laboral Trabalho XXI: o que muda para os empregadores",q:"O que tenho de mudar nos contratos com a nova lei laboral?",a:"O que já está em vigor, o que ainda é proposta e o que rever."},
+{id:"N2",ar:"LB",pub:"Empresas",t:"Contratar um trabalhador de fora da UE: os passos do empregador",q:"Quero contratar um engenheiro do Brasil. Por onde começo?",a:"Visto certo, documentos da empresa, prazos e obrigações."},
+{id:"N37",ar:"RG",pub:"Empresas",t:"RGPD para pequenas empresas: a lista mínima",q:"Tenho oito funcionários. O que preciso mesmo de ter em RGPD?",a:"Registo de tratamentos, avisos, contratos com fornecedores e violações de dados."},
+{id:"N44",ar:"RG",pub:"Empresas",t:"Canal de denúncias: que empresas têm de o ter",q:"A minha empresa tem 60 trabalhadores. Preciso de um canal de denúncias?",a:"Quem está obrigado, como montar o canal e prazos de resposta."},
+{id:"N22",ar:"CT",pub:"Empresas",t:"Contratos comerciais em Portugal: o essencial para empresas estrangeiras",q:"O contrato pode ficar sujeito à lei inglesa?",a:"Lei aplicável, foro, cláusulas obrigatórias e erros comuns."},
+{id:"139",ar:"IB",pub:"Pessoas que se mudam",t:"Contrato-promessa de compra e venda (CPCV): o que verificar antes de assinar",q:"Vou assinar o CPCV amanhã. O que devo confirmar?",a:"Sinal, prazos, condições e o que acontece se alguém desistir."}
+];
+const D8={id:"IM-041",ar:"IM",pub:"Pessoas que se mudam",title:"Visto D8 (nómada digital): que rendimento é preciso em 2026?",img:"Tejo ao fim da tarde, vista de Alfama",
+facts:[
+{t:"O rendimento mínimo para o visto D8 é de 4 vezes o salário mínimo nacional.",src:"Lei n.º 23/2007 (Lei de Estrangeiros), versão atualizada",url:"https://diariodarepublica.pt"},
+{t:"Em 2026, isso corresponde a 3.680 € por mês.",src:"Diploma que fixa o salário mínimo nacional para 2026",url:"https://diariodarepublica.pt",flag:"Confirmar se o valor de referência é o do ano do pedido."},
+{t:"O rendimento tem de vir de trabalho prestado à distância para entidades ou clientes fora de Portugal.",src:"Lei n.º 23/2007, regime da atividade profissional prestada à distância",url:"https://diariodarepublica.pt"},
+{t:"Há duas modalidades: visto de estada temporária, até um ano, e visto de residência.",src:"Portal Vistos — Ministério dos Negócios Estrangeiros",url:"https://vistos.mne.gov.pt"},
+{t:"Depois de entrar com o visto de residência, a autorização de residência é pedida à AIMA.",src:"AIMA — autorizações de residência",url:"https://aima.gov.pt"}],
+body:()=>`<p class="lead">Quem trabalha à distância para uma empresa ou para clientes de fora de Portugal pode viver no país com o visto D8, conhecido como visto de nómada digital. A pergunta que mais se ouve é quanto é preciso ganhar. <span class="fx" data-f="0">O rendimento mínimo corresponde a quatro vezes o salário mínimo nacional<sup>1</sup></span>, o que em 2026 dá <span class="fx" data-f="1">3.680 € por mês<sup>2</sup></span>.</p>
+<p>Este valor muda todos os anos, porque acompanha o salário mínimo. Por isso, quem prepara o pedido no fim do ano deve confirmar qual é o valor que o consulado vai aplicar no dia da entrega. <span class="vf">[VERIFICAR]</span></p>
+<h2>Que rendimento conta para o visto D8?</h2>
+<p>Conta o rendimento de trabalho feito à distância. <span class="fx" data-f="2">Tem de vir de empregadores ou clientes fora de Portugal<sup>3</sup></span>: um salário pago por uma empresa estrangeira ou a faturação a clientes de outros países. O consulado pede, em regra, os contratos e os extratos bancários dos últimos meses, para ver que o rendimento é regular.</p>
+<h2>Estada temporária ou residência: qual escolher?</h2>
+<p><span class="fx" data-f="3">Há duas modalidades: o visto de estada temporária, que permite ficar até um ano, e o visto de residência<sup>4</sup></span>. A primeira serve para quem quer experimentar viver em Portugal. A segunda é para quem quer ficar, porque abre caminho à autorização de residência.</p>
+<h2>O que acontece depois de chegar?</h2>
+<p><span class="fx" data-f="4">Com o visto de residência, a autorização de residência é pedida à AIMA<sup>5</sup></span>, a Agência para a Integração, Migrações e Asilo, que trata dos títulos de residência em Portugal.</p>
+<h2>Erros comuns</h2>
+<p>Apresentar rendimento de clientes portugueses, juntar extratos que não mostram pagamentos regulares, ou fazer as contas com o salário mínimo do ano anterior.</p>`};
+const FT={id:"LB-012",ar:"LB",pub:"Empresas",title:"Contrato a termo: quando é que a lei o permite?",q:"Posso contratar a prazo só para experimentar a pessoa?",a:"Os motivos que a lei aceita, a duração máxima e o que acontece se o motivo não for válido."};
+function tplArt(t){return{id:t.id,ar:t.ar,pub:t.pub,title:t.t||t.title,img:"Fachada de azulejo em Lisboa",tpl:true,
+facts:[{t:"Exemplo de facto 1: o requisito principal, com número ou prazo.",src:"Diploma aplicável no Diário da República",url:"https://diariodarepublica.pt"},
+{t:"Exemplo de facto 2: o prazo ou a consequência legal.",src:"Página oficial da entidade competente",url:"https://eportugal.gov.pt"}],
+body:()=>`<p class="lead">Texto de exemplo. Na versão real, o Claude escreve aqui uma introdução de dois ou três parágrafos que responde logo à pergunta, com base nas fontes oficiais. Este artigo trata de ${esc((t.a||'').toLowerCase())}</p>
+<p>Uma empresa ou uma pessoa que se pergunta «${esc(t.q||'')}» encontra aqui a resposta direta, os passos e o que preparar. <span class="fx" data-f="0">Aqui ficaria o primeiro facto com fonte<sup>1</sup></span>.</p>
+<h2>${esc(t.q||'')}</h2>
+<p>Explicação em texto corrido, com os termos jurídicos explicados na primeira vez. <span class="fx" data-f="1">Aqui ficaria o segundo facto com fonte<sup>2</sup></span>.</p>
+<h2>Erros comuns</h2><p>Os erros mais frequentes, escritos em linguagem simples.</p>`}}
+const BASE={a1:[D8],a2:[tplArt(FT)]};
+const fresh=()=>({day:0,dec:{},notes:{},hist:[],queued:{},arts:{},sug:[]});
+let S={role:null,r:{a1:fresh(),a2:fresh()}};
+try{const s=JSON.parse(localStorage.getItem('hbbrev4')||'null');if(s)S=s}catch(e){}
+function save(){try{localStorage.setItem('hbbrev4',JSON.stringify(S))}catch(e){}}
+const v=document.getElementById('v'),hb=document.getElementById('homeBtn'),sheet=document.getElementById('sheet'),shIn=document.getElementById('shIn'),roleL=document.getElementById('roleL');
+hb.onclick=()=>v.dataset.s==='home'?login():home();
+function sub(){hb.hidden=false;hb.textContent='Início';v.dataset.s=''}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function fitLogo(){const n=document.getElementById('lgN'),d=document.getElementById('lgD');d.style.letterSpacing='0px';const w=n.getBoundingClientRect().width,c=d.textContent.length,dw=d.getBoundingClientRect().width;d.style.letterSpacing=Math.max(0,(w-dw)/(c-1))+'px';d.style.marginRight='-'+d.style.letterSpacing}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fitLogo);
+function closeSheet(){sheet.classList.remove('on')}
+sheet.onclick=e=>{if(e.target===sheet)closeSheet()};
+const R=()=>S.r[S.role], other=()=>S.r[S.role==='a1'?'a2':'a1'];
+/* ---------- login ---------- */
+function login(){S.role=null;save();hb.hidden=true;roleL.textContent='Revisão';
+v.innerHTML=`<div class="lbl">Protótipo</div><h1>Quem está a entrar?</h1><hr class="rule">
+<p class="sec">Na versão real cada advogada entra com o email da firma e vê só as suas áreas. Aqui pode experimentar as duas.</p>
+${Object.entries(ROLES).map(([k,r])=>`<button class="tile" data-r="${k}"><span class="num f">${k==='a1'?1:2}</span><span><b>${r.name}</b><span class="sec">${r.areas.filter(a=>a!=='FORA').map(a=>AREAS[a]).join(' · ')}</span></span></button>`).join('')}
+<button class="btn q" id="rst" style="margin-top:auto">Recomeçar o protótipo</button>`;
+v.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{S.role=b.dataset.r;save();home()});
+rst.onclick=()=>{S={role:null,r:{a1:fresh(),a2:fresh()}};save();login()};}
+/* ---------- data helpers ---------- */
+const myTopics=()=>TOPICS.filter(t=>ROLES[S.role].areas.includes(t.ar));
+const takenByOther=t=>t.ar==='CM'&&['sim','mas'].includes(other().dec[t.id]);
+const pending=()=>myTopics().filter(t=>!R().dec[t.id]&&!takenByOther(t));
+function myArts(){const r=R(),list=BASE[S.role].map(a=>({a,ready:0}));
+myTopics().forEach(t=>{if(r.queued[t.id]!==undefined)list.push({a:tplArt(t),ready:r.queued[t.id]+1})});(r.sug||[]).forEach(t=>list.push({a:tplArt(t),ready:t.day+1}));return list}
+function st(id){const r=R();return r.arts[id]||(r.arts[id]={fx:{},fxn:{},status:'review',v:1,edited:null,read:false,at:0})}
+function status(x){const r=R(),s=st(x.a.id);if(r.day<x.ready)return'writing';if(['fixing','rewriting'].includes(s.status)&&r.day>s.at){s.status='review';s.v++;s.read=false;if(s.rw){s.fx={};s.fxn={};s.edited=null;s.rw=0}else{Object.keys(s.fxn).forEach(k=>{delete s.fx[k];delete s.fxn[k]})}save()}return s.status}
+const LAB={writing:['Em escrita','Chega amanhã de manhã','var(--line)'],review:['Para rever','','var(--blue)'],fixing:['Com o Claude','Volta amanhã de manhã','var(--gold)'],rewriting:['A ser reescrito','Volta amanhã de manhã','var(--gold)'],final:['Versão final','Segue para tradução e publicação','var(--slate)']};
+function sim24(back){R().day++;save();back()}
+/* ---------- home ---------- */
+function home(){hb.hidden=false;hb.textContent='Trocar';v.dataset.s='home';roleL.textContent=ROLES[S.role].name;const r=R(),arts=myArts(),c={};arts.forEach(x=>{const s=status(x);c[s]=(c[s]||0)+1});
+v.innerHTML=`<div class="lbl">${ROLES[S.role].areas.filter(a=>a!=='FORA').map(a=>AREAS[a]).join(' · ')}</div><h1>O que está à sua espera</h1><hr class="rule">
+<button class="tile" id="goT"><span class="num ${pending().length?'f':''}">${pending().length}</span><span><b>Temas para decidir</b><span class="sec">Escolha o que deve ser escrito. Deslize para a direita para escrever, para a esquerda para não escrever.</span></span></button>
+<button class="tile" id="goA"><span class="num ${c.review?'f':''}">${c.review||0}</span><span><b>Artigos para rever</b><span class="sec">${[c.writing?c.writing+' em escrita':'',c.fixing||c.rewriting?((c.fixing||0)+(c.rewriting||0))+' com o Claude':'',c.final?c.final+' em versão final':''].filter(Boolean).join(' · ')||'Os artigos dos temas que escolher aparecem aqui.'}</span></span></button>
+<button class="tile" id="goS"><span class="num">+</span><span><b>Sugerir um artigo</b><span class="sec">Uma pergunta de um cliente, uma lei nova, um tema que falta. Vai direto para escrita.</span></span></button>
+<button class="btn" id="goL">O que o Claude aprendeu consigo</button>
+<div class="li" style="background:var(--ivory)"><span class="sec"><b>Só no protótipo:</b> na versão real, os artigos são escritos durante a noite e recebe um aviso de manhã. Aqui, use o botão abaixo para passar ao dia seguinte.</span></div>
+<button class="btn q" id="nd">⏱ Protótipo: simular as 24 horas</button>`;
+goT.onclick=deck;goA.onclick=artList;goS.onclick=suggest;goL.onclick=learned;nd.onclick=()=>{r.day++;save();home()};}
+/* ---------- deck ---------- */
+function card(t){return `<div class="lbl">${esc(AREAS[t.ar])} · ${esc(t.pub)}</div>${t.w?`<span class="flagt">${esc(t.w)}</span>`:''}${t.ar==='CM'?'<span class="flagt">Área partilhada · fica com quem escolher primeiro</span>':''}
+<h3>${esc(t.t)}</h3><div><div class="lbl" style="color:var(--slate)">Pergunta real</div><div class="q">${esc(t.q)}</div></div>
+<div><div class="lbl" style="color:var(--slate)">O artigo responde a</div><p class="sec">${esc(t.a)}</p></div>
+<span class="stamp s-yes">ESCREVER</span><span class="stamp s-no">NÃO</span>`}
+function deck(){sub();const P=pending();if(!P.length)return deckDone();const t=P[0],n=P[1],all=myTopics().filter(x=>!takenByOther(x)).length;
+v.innerHTML=`<div class="row" style="align-items:center;gap:14px"><div class="bar"><i style="width:${(all-P.length)/all*100}%"></i></div><span class="sec" style="flex:none">${all-P.length+1} de ${all}</span></div>
+<div class="deck">${n?`<div class="sc back">${card(n)}</div>`:''}<div class="sc" id="top">${card(t)}</div></div>
+<div class="acts"><button class="rb sm" id="bU" aria-label="Desfazer" ${R().hist.length?'':'disabled style="opacity:.3"'}>↶</button><button class="rb no" id="bN" aria-label="Não escrever">✕</button><button class="rb may" id="bM" aria-label="Sim, com nota">?</button><button class="rb yes" id="bY" aria-label="Escrever">✓</button></div>
+<p class="hint">✓ escrever · ✕ não escrever · ? sim, com uma nota · ↶ desfazer</p>`;
+const el=document.getElementById('top'),sy=el.querySelector('.s-yes'),sn=el.querySelector('.s-no');let x0=null,dx=0;
+el.onpointerdown=e=>{x0=e.clientX;dx=0;el.classList.add('drag');el.setPointerCapture(e.pointerId)};
+el.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;el.style.transform=`translateX(${dx}px) rotate(${dx/22}deg)`;sy.style.opacity=Math.max(0,dx/100);sn.style.opacity=Math.max(0,-dx/100)};
+el.onpointerup=()=>{el.classList.remove('drag');x0=null;if(dx>100)decide(t,'sim');else if(dx<-100)decide(t,'nao');else{el.style.transform='';sy.style.opacity=sn.style.opacity=0}};
+bY.onclick=()=>decide(t,'sim');bN.onclick=()=>decide(t,'nao');bM.onclick=()=>noteSheet(t);bU.onclick=undoDeck;}
+function decide(t,d,note){const r=R(),el=document.getElementById('top');r.dec[t.id]=d;if(note)r.notes[t.id]=note;r.hist.push(t.id);if(d!=='nao')r.queued[t.id]=r.day;save();
+if(el){el.style.transform=`translateX(${d==='nao'?-600:600}px) rotate(${d==='nao'?-20:20}deg)`;setTimeout(deck,220)}else deck()}
+function undoDeck(){const r=R(),id=r.hist.pop();if(!id)return;delete r.dec[id];delete r.notes[id];delete r.queued[id];save();deck()}
+function noteSheet(t){shIn.innerHTML=`<div class="lbl">Sim, com uma nota</div><h2>Em que condições?</h2><p class="sec">No telemóvel pode ditar com o microfone do teclado.</p>
+<textarea id="shTx" placeholder="Ex.: só como enquadramento, sem cálculo de impostos"></textarea>
+<div class="row"><button class="btn q" id="shC">Cancelar</button><button class="btn p" id="shOk">Guardar</button></div>`;
+sheet.classList.add('on');setTimeout(()=>shTx.focus(),50);shC.onclick=closeSheet;shOk.onclick=()=>{closeSheet();decide(t,'mas',shTx.value.trim()||'(sem nota)')}}
+document.onkeydown=e=>{if(!document.getElementById('top')||sheet.classList.contains('on'))return;const t=pending()[0];if(e.key==='ArrowRight')decide(t,'sim');if(e.key==='ArrowLeft')decide(t,'nao');if(e.key==='ArrowUp')noteSheet(t);if(e.key==='Backspace')undoDeck()};
+function deckDone(){const r=R(),lab={sim:['Escrever','var(--blue)'],nao:['Não escrever','var(--slate)'],mas:['Escrever, com nota','var(--gold)']};
+const mine=myTopics().filter(t=>r.dec[t.id]),yes=mine.filter(t=>r.dec[t.id]!=='nao').length;
+v.innerHTML=`<div class="done" style="padding-top:8px"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Está feito</h1>
+<p class="sec">${yes?`Escolheu ${yes} ${yes===1?'tema':'temas'}. O Claude escreve-os durante a noite. Amanhã de manhã aparecem em <b>Artigos para rever</b> e recebe um aviso.`:'Não escolheu nenhum tema para escrever.'} Não precisa de fazer mais nada agora.</p></div>
+<div class="list"><div class="lbl">As suas decisões</div>${mine.map(t=>`<div class="li"><span class="sq" style="background:${lab[r.dec[t.id]][1]}"></span><span><b>${lab[r.dec[t.id]][0]}</b> · ${esc(t.t)}${r.notes[t.id]?`<br><span class="sec">${esc(r.notes[t.id])}</span>`:''}</span></div>`).join('')||'<p class="sec">Sem decisões.</p>'}</div>
+<button class="btn p" id="ga">Ver os artigos para rever</button><button class="btn q" id="s24">⏱ Protótipo: simular as 24 horas</button>${r.hist.length?'<button class="btn" id="un">↶ Desfazer a última decisão</button>':''}<button class="btn q" id="bk">Voltar ao início</button>`;
+ga.onclick=artList;s24.onclick=()=>sim24(artList);bk.onclick=home;if(window.un)un.onclick=undoDeck;}
+/* ---------- suggestions ---------- */
+function suggest(){sub();const ar=ROLES[S.role].areas.filter(a=>a!=='FORA');
+v.innerHTML=`<div class="lbl">Sugestão</div><h1>Sugerir um artigo</h1><hr class="rule">
+<p class="sec">Escreva como um cliente perguntaria. O Claude escreve o artigo esta noite e ele aparece em Artigos para rever.</p>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Pergunta ou tema *</span><textarea id="sQ" placeholder="Ex.: Uma empresa pode pagar o salário de um trabalhador estrangeiro antes de ele ter NISS?"></textarea></div>
+<div class="row"><div class="fld"><span class="lbl" style="color:var(--slate)">Área</span><select id="sA">${ar.map(a=>`<option value="${a}">${AREAS[a]}</option>`).join('')}</select></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Público</span><select id="sP"><option>Empresas</option><option>Pessoas que se mudam</option><option>Ambos</option></select></div></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Porque é importante? (opcional)</span><textarea id="sW" style="min-height:70px" placeholder="Ex.: três clientes perguntaram isto este mês; mudou a lei em outubro"></textarea></div>
+<div class="fld"><span class="lbl" style="color:var(--slate)">Fonte oficial (opcional)</span><input type="url" id="sL" placeholder="https://diariodarepublica.pt/…"></div>
+<p class="sec" id="sE" style="color:var(--gold)"></p>
+<button class="btn p" id="sGo">Enviar sugestão</button><button class="btn q" id="bk">Cancelar</button>`;
+bk.onclick=home;sGo.onclick=()=>{const q=sQ.value.trim();if(q.length<10){sE.textContent='Escreva a pergunta ou o tema (pelo menos uma frase curta).';return}
+const r=R();r.sug=r.sug||[];const t={id:'S'+(r.sug.length+1)+S.role,ar:sA.value,pub:sP.value,t:q.replace(/\?$/,'')+(q.endsWith('?')?'?':''),q,a:sW.value.trim()||'a pergunta sugerida pela advogada.',why:sW.value.trim(),link:sL.value.trim(),day:r.day};
+r.sug.push(t);save();
+v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Sugestão recebida</h1>
+<p class="sec">O Claude escreve este artigo esta noite, com fontes oficiais${t.link?' (incluindo a que indicou)':''}. Amanhã de manhã aparece em <b>Artigos para rever</b>. A sugestão fica também a contar para o que o Claude propõe no futuro.</p></div>
+<div class="li"><span class="sq" style="background:var(--blue)"></span><span><b>${esc(AREAS[t.ar])}</b> · ${esc(t.q)}</span></div>
+<button class="btn p" id="again">Sugerir outro</button><button class="btn q" id="s24">⏱ Protótipo: simular as 24 horas</button><button class="btn q" id="bk">Voltar ao início</button>`;
+again.onclick=suggest;s24.onclick=()=>sim24(artList);bk.onclick=home}}
+function learned(){sub();const r=R(),mine=myTopics(),no=mine.filter(t=>r.dec[t.id]==='nao'),yes=mine.filter(t=>['sim','mas'].includes(r.dec[t.id])),sug=r.sug||[];
+const fixes=[];Object.values(r.arts).forEach(s=>Object.values(s.fxn||{}).forEach(x=>fixes.push(x)));
+const cnt={};[...yes,...sug].forEach(t=>cnt[t.ar]=(cnt[t.ar]||0)+1);const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([a,n])=>`${AREAS[a]} (${n})`).join(' · ');
+const item=(c,t)=>`<div class="li"><span class="sq" style="background:${c}"></span><span>${t}</span></div>`;
+v.innerHTML=`<div class="lbl">Aprendizagem</div><h1>O que o Claude aprendeu consigo</h1><hr class="rule">
+<p class="sec">Tudo o que decide fica guardado e é lido antes de propor e escrever os artigos seguintes. Não muda o modelo; muda as regras e a lista de temas que ele usa.</p>
+<div class="list"><div class="lbl">Temas que prefere</div>${top?item('var(--blue)',esc(top)):item('var(--line)','Ainda sem dados. Escolha temas ou sugira um.')}
+${sug.map(t=>item('var(--blue)','Sugeriu: '+esc(t.q)+(t.why?`<br><span class="sec">${esc(t.why)}</span>`:''))).join('')}
+<div class="lbl" style="margin-top:8px">Temas que não quer</div>${no.length?no.map(t=>item('var(--slate)',esc(t.t))).join('')+item('var(--slate)','Temas parecidos descem na lista e deixam de lhe ser propostos.'):item('var(--line)','Nenhum recusado.')}
+<div class="lbl" style="margin-top:8px">Correções que viram regras</div>${fixes.length?fixes.map(x=>item('var(--gold)',esc(x))).join('')+item('var(--gold)','Correções repetidas passam a regra fixa na escrita dos próximos artigos.'):item('var(--line)','Ainda sem correções.')}</div>
+<button class="btn p" id="bk">Voltar ao início</button>`;bk.onclick=home}
+/* ---------- article list ---------- */
+function artList(){sub();const L=myArts();
+v.innerHTML=`<div class="lbl">Artigos</div><h1>Os seus artigos</h1><hr class="rule">
+<div class="list">${L.map(x=>{const s=status(x),l=LAB[s],sv=st(x.a.id);return `<button class="tile" data-id="${x.a.id}" ${s==='review'||s==='final'?'':'disabled style="cursor:default"'}><span class="sq" style="width:12px;height:12px;background:${l[2]};margin:0"></span><span><span class="lbl" style="color:var(--slate)">${l[0]}${s==='review'&&sv.v>1?' · versão '+sv.v:''}</span><b>${esc(x.a.title)}</b>${l[1]?`<span class="sec">${l[1]}</span>`:''}</span></button>`}).join('')}</div>
+<button class="btn q" id="s24">⏱ Protótipo: simular as 24 horas</button><button class="btn q" id="bk">Voltar ao início</button>`;
+s24.onclick=()=>sim24(artList);
+v.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{const x=L.find(y=>y.a.id===b.dataset.id);status(x)==='final'?finish(x.a,true):article(x.a)});bk.onclick=home;}
+/* ---------- article ---------- */
+function bodyOf(A){const s=st(A.id);return s.edited||A.body()}
+function paint(A,root){const s=st(A.id);root.querySelectorAll('.fx').forEach(e=>{const i=+e.dataset.f;e.classList.toggle('ok',s.fx[i]==='ok');e.classList.toggle('bad',!!s.fx[i]&&s.fx[i]!=='ok');e.onclick=()=>facts(A,i)})}
+function article(A,edit){sub();const s=st(A.id),nf=Object.keys(s.fxn).length,done=Object.keys(s.fx).length,all=A.facts.length;
+const fixes=Object.keys(s.fxn).map(k=>`<div class="li"><span class="sq" style="background:var(--gold)"></span><span><b>Facto ${+k+1}:</b> ${esc(s.fxn[k])}</span></div>`).join('');
+v.innerHTML=`<div class="lbl">${AREAS[A.ar]} · ${A.pub} · ${A.id}${s.v>1?' · versão '+s.v:''}</div>
+<p class="sec">${edit?'Toque no texto para corrigir. As alterações voltam ao Claude e regressam a si para confirmar.':(s.v>1?'Nova versão com as suas correções. Confirme os factos alterados.':'O artigo como vai aparecer no site. Os factos sublinhados têm fonte; toque num para o confirmar.')}</p>
+${A.tpl&&!edit?'<div class="warn"><b>EXEMPLO</b> · No protótipo, este artigo usa texto de demonstração.</div>':''}
+${fixes&&!edit?`<div class="list"><div class="lbl">As suas correções</div>${fixes}</div>`:''}
+<article class="page"><div class="cover"><small>Imagem: ${esc(A.img)}</small></div>
+<div class="pg"><h1>${esc(A.title)}</h1><div class="meta">HBB – Harbor Beyond Borders · Última verificação: 18 de novembro de 2026</div>
+<div id="artB" ${edit?'contenteditable="true" class="edit"':''}>${bodyOf(A)}</div>
+<h2>Fontes</h2><p class="src">${A.facts.map((f,i)=>`${i+1}. <a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)}</a>`).join('<br>')}</p>
+<div class="cta">Marcar primeira reunião</div></div></article>
+${edit?'<button class="btn p" id="eSv">Guardar alterações</button><button class="btn q" id="eCn">Cancelar</button>':`
+<button class="btn ${done<all?'p':''}" id="aFacts">${done<all?(done?`Factos confirmados: ${done} de ${all} · continuar`:`Confirmar os ${all} factos`):`Factos: ${all-nf} certos, ${nf} a corrigir · rever outra vez`}</button>
+<div class="row"><button class="btn" id="eEd">✎ Editar o texto</button><button class="btn" id="aQ">Enviar dúvida</button></div>
+${s.edited?'<button class="btn q" id="eRs">↶ Desfazer alterações ao texto</button>':''}
+<div class="lbl" style="margin-top:8px">Decisão</div>
+<label class="li" style="cursor:pointer;align-items:center"><input type="checkbox" id="rd" ${s.read?'checked':''} style="width:20px;height:20px;accent-color:#12233F"><span>Li o texto completo</span></label>
+<button class="btn p" id="aY" disabled>Aprovar a versão final</button>
+<button class="btn g" id="aW" disabled>Enviar as correções ao Claude</button>
+<button class="btn q" id="aN">Rejeitar e pedir nova versão</button>
+<p class="hint" id="hn"></p>`}`;
+const b=document.getElementById('artB');if(!edit)paint(A,b);
+if(edit){eSv.onclick=()=>{s.edited=b.innerHTML;save();article(A)};eCn.onclick=()=>article(A);return}
+const upd=()=>{const ch=nf>0||!!s.edited;aY.disabled=!(s.read&&done===all&&!ch);aW.disabled=!ch;
+hn.textContent=ch?'Tem correções: envie-as ao Claude. A nova versão volta a si para confirmar.':(done<all?'Confirme todos os factos para poder aprovar.':(!s.read?'Marque "Li o texto completo" para aprovar.':'Pronto a aprovar.'))};upd();
+rd.onchange=()=>{s.read=rd.checked;save();upd()};
+aFacts.onclick=()=>{const k=A.facts.findIndex((_,i)=>!s.fx[i]);facts(A,k<0?0:k)};
+eEd.onclick=()=>article(A,true);aQ.onclick=()=>doubt(A,null);
+if(window.eRs)eRs.onclick=()=>{s.edited=null;save();article(A)};
+aY.onclick=()=>{s.status='final';s.at=R().day;save();finish(A)};
+aW.onclick=()=>{s.status='fixing';s.at=R().day;save();sent(A,'fixing')};
+aN.onclick=()=>{s.status='rewriting';s.rw=1;s.at=R().day;save();sent(A,'rewriting')};}
+function ctxOf(A,i){const d=document.createElement('div');d.innerHTML=A.body();const e=d.querySelector(`.fx[data-f="${i}"]`);return e?e.closest('p').textContent:''}
+function facts(A,i){sub();const s=st(A.id),F=A.facts,f=F[i];
+v.innerHTML=`<div class="row" style="align-items:center;gap:14px"><div class="bar"><i style="width:${Object.keys(s.fx).length/F.length*100}%"></i></div><span class="sec" style="flex:none">Facto ${i+1} de ${F.length}</span></div>
+<div class="fact"><div class="lbl">Facto ${i+1} · ${esc(A.title)}</div><div class="t">${esc(f.t)}</div>
+${f.flag?`<div class="warn"><b>VERIFICAR</b> · ${esc(f.flag)}</div>`:''}
+<div><div class="lbl" style="color:var(--slate)">No texto</div><p class="ctxp">${esc(ctxOf(A,i))}</p></div>
+<div><div class="lbl" style="color:var(--slate)">Fonte oficial</div><a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)} ↗</a></div>
+<div id="fixw" style="display:none;flex-direction:column;gap:10px"><textarea id="fixtx" placeholder="O que está errado e qual é a regra ou o valor certo?"></textarea>
+<button class="btn" id="fEd">✎ Corrigir diretamente no texto</button>
+<button class="btn" id="fQ">Enviar dúvida ao Rui por WhatsApp</button>
+<label class="btn">Anexar documento<input type="file" id="fAtt" hidden></label><span class="sec" id="attN"></span></div></div>
+<div class="row" id="fb"><button class="btn q" id="fN">✕ Corrigir</button><button class="btn p" id="fY">✓ Certo</button></div>
+<div class="row"><button class="btn q" id="fU" ${i?'':'disabled'}>↶ Anterior</button><button class="btn" id="fA">Ver o artigo</button></div>`;
+const next=()=>{save();const k=F.findIndex((_,j)=>!s.fx[j]);k<0?article(A):facts(A,k)};
+fU.onclick=()=>{delete s.fx[i-1];delete s.fxn[i-1];save();facts(A,i-1)};
+fA.onclick=()=>article(A);
+fY.onclick=()=>{s.fx[i]='ok';delete s.fxn[i];next()};
+fN.onclick=()=>{fixw.style.display='flex';fixtx.focus();fb.innerHTML='<button class="btn q" id="fBk">Cancelar</button><button class="btn g" id="fSv">Guardar correção</button>';
+let att='';fAtt.onchange=()=>{att=fAtt.files[0]?fAtt.files[0].name:'';attN.textContent=att?'Anexo: '+att:''};
+const note=x=>[fixtx.value.trim(),x,att?'Anexo: '+att:''].filter(Boolean).join(' · ')||'(sem texto)';
+fBk.onclick=()=>facts(A,i);fSv.onclick=()=>{s.fx[i]='fix';s.fxn[i]=note();next()};
+fEd.onclick=()=>{s.fx[i]='fix';s.fxn[i]=note('corrigido no texto');save();article(A,true)};
+fQ.onclick=()=>doubt(A,i,fixtx.value.trim())}}
+function doubt(A,i,pre){const f=i===null?null:A.facts[i];
+shIn.innerHTML=`<div class="lbl">Dúvida</div><h2>Mensagem para o Rui</h2>
+<p class="sec">Abre o WhatsApp com a mensagem já escrita, com o artigo${f?' e o facto':''}. Só tem de carregar em enviar.</p>
+<textarea id="qTx" placeholder="Escreva a dúvida">${esc(pre||'')}</textarea>
+<a class="btn p" id="qGo" target="_blank" rel="noopener">Abrir no WhatsApp</a><button class="btn q" id="qC">Cancelar</button>`;
+sheet.classList.add('on');
+const build=()=>`HBB Revisão · dúvida\nArtigo: ${A.title} (${A.id})\n${f?`Facto ${i+1}: ${f.t}\n`:''}Dúvida: ${qTx.value.trim()||'—'}`;
+const upd=()=>qGo.href=`https://wa.me/${WA_RUI}?text=${encodeURIComponent(build())}`;upd();qTx.oninput=upd;
+qGo.onclick=()=>{const s=st(A.id);if(i!==null){s.fx[i]='call';s.fxn[i]=(qTx.value.trim()||'dúvida')+' · enviada ao Rui por WhatsApp';save()}setTimeout(()=>{closeSheet();i===null?article(A):facts(A,i)},300)};
+qC.onclick=closeSheet;setTimeout(()=>qTx.focus(),50)}
+function sent(A,k){const m={fixing:['Correções enviadas','O Claude aplica as suas correções esta noite. Amanhã de manhã a nova versão aparece em Artigos para rever, só com as partes alteradas para confirmar.'],
+rewriting:['Pedido de nova versão enviado','O Claude reescreve o artigo esta noite com as suas notas. Amanhã de manhã volta a si para rever.']}[k];
+v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">↻</span><h1>${m[0]}</h1><p class="sec">${m[1]}</p></div><hr class="rule">
+<button class="btn" id="dU">↶ Desfazer</button><button class="btn q" id="s24">⏱ Protótipo: simular as 24 horas</button><button class="btn p" id="bk">Ver os outros artigos</button>`;s24.onclick=()=>sim24(artList);
+dU.onclick=()=>{const s=st(A.id);s.status='review';s.rw=0;save();article(A)};bk.onclick=artList;}
+function finish(A,view){const s=st(A.id);
+v.innerHTML=`<div class="done"><span class="num f" style="width:60px;height:60px;font-size:26px">✓</span><h1>Versão final aprovada</h1>
+<p class="sec">O artigo é traduzido para EN, ES e FR e segue para o Rui, que escolhe a imagem e publica. Não precisa de fazer mais nada.</p></div><hr class="rule">
+<button class="btn" id="dF">Ver o artigo</button>${R().day===s.at?'<button class="btn q" id="dU">↶ Desfazer aprovação</button>':''}<button class="btn p" id="bk">Ver os outros artigos</button>`;
+dF.onclick=()=>{v.innerHTML=`<article class="page"><div class="pg"><h1>${esc(A.title)}</h1><div class="meta">Versão final aprovada</div>${bodyOf(A)}</div></article><button class="btn p" id="bb">Voltar</button>`;bb.onclick=()=>finish(A)};
+if(window.dU)dU.onclick=()=>{s.status='review';save();article(A)};bk.onclick=artList;}
+S.role?home():login();
+</script>
+</body>
+</html>
